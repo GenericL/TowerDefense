@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/TDCombatUics.uss?fileID=7433441132597879392&amp;guid=e5b1559c25236164cb26205af872ba4f&amp;type=3#TDCombatUics" />
+    <ui:VisualElement name="CombatPanel" style="flex-grow: 1;" />
+    <ui:VisualElement name="PrincipalPanel" style="flex-grow: 1;">
+        <ui:Button text="Character" name="InstiantateUnit" />
+    </ui:VisualElement>
+</ui:UXML>

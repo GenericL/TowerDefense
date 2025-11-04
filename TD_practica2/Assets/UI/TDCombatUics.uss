@@ -1,0 +1,17 @@
+#PrincipalPanel {
+    align-content: auto;
+    width: auto;
+    height: 20%;
+    top: 40%;
+}
+
+Button {
+    width: auto;
+    height: auto;
+    align-self: flex-end;
+    max-height: 100%;
+    max-width: 40%;
+    min-width: 20%;
+    min-height: 30%;
+    align-items: stretch;
+}
