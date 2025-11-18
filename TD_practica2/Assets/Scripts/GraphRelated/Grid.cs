@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class Grid<T>
 {
+    
+    public event EventHandler<OnGridValueChangedEventArgs> OnGridValueChanged;
+    public class OnGridValueChangedEventArgs : EventArgs
+    {
+        public int x;
+        public int y;
+    }
     private int width;
     private int height;
     private float cellSize;
     private Vector3 originPosition;
     private T[,] gridArray;
-    private TextMesh[,] debugTextArray; 
-    public Grid(int width, int height, float cellSize, Vector3 originPostition, Func<T> createGridObject) { 
+    private TextMesh[,] debugTextArray;
+    public Grid(int width, int height, float cellSize, Vector3 originPostition, Func<Grid<T>, int, int, T> createGridObject) { 
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
@@ -19,11 +26,13 @@ public class Grid<T>
         gridArray = new T[width, height];
         debugTextArray = new TextMesh[width, height];
 
+        gridArray = new T[width,height];
+
         for (int x = 0; x < gridArray.GetLength(0); x++)
         {
             for (int y = 0; y < gridArray.GetLength(1); y++)
             {
-                gridArray[x, y] = createGridObject();
+                gridArray[x, y] = createGridObject(this,x,y);
             }
         }
 
@@ -44,7 +53,11 @@ public class Grid<T>
         }
         Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
         Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
-   
+    }
+
+    public void TriggerGridObjectChanged(int x, int y)
+    {
+        if (OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs { x = x, y = y });
     }
 
     private Vector3 GetWorldPosition(int x, int y)
@@ -58,12 +71,12 @@ public class Grid<T>
         y = Mathf.FloorToInt((worldPosition - originPosition).y / cellSize);
     }
 
-    public void SetValue(int x, int y, T value)
+    public void SetGridObject(int x, int y, T value)
     {
         if(x >= 0 && y  >= 0 && x < width && y < height)
         {
             gridArray[x, y] = value;
-            debugTextArray[x,y].text = gridArray[x, y].ToString();
+            if (OnGridValueChanged != null) OnGridValueChanged(this, new OnGridValueChangedEventArgs { x = x, y = y });
         }
     }
 
@@ -71,7 +84,7 @@ public class Grid<T>
     {
         int x, y;
         GetXY(worldPosition, out x, out y);
-        SetValue(x, y, value);
+        SetGridObject(x, y, value);
     }
 
     public T GetGridObject(int x, int y) {
@@ -85,5 +98,13 @@ public class Grid<T>
         int x, y;
         GetXY(worldPosition, out x, out y);
         return GetGridObject(x, y);
+    }
+
+    public int GetWidth()
+    {
+        return width;
+    }
+    public int GetHeight() {
+        return height;
     }
 }

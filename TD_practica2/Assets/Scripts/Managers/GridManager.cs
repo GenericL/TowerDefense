@@ -7,7 +7,7 @@ public class GridManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        grid = new Grid<bool>(4, 2, 4f, new Vector3(-20,0), () => true);
+        grid = new Grid<bool>(4, 2, 4f, new Vector3(-20,0), (Grid<bool> g, int x, int y) => true);
     }
 
     void Update()
