@@ -270,8 +270,6 @@ namespace CodeMonkey.Utils {
                 return hits.Count > 0;
             }
         }
-
-
         
 		// Returns 00-FF, value 0->255
 	    public static string Dec_to_Hex(int value) {
