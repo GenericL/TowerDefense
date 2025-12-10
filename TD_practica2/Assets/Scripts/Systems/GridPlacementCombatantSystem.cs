@@ -19,6 +19,7 @@ public class GridPlacementCombatantSystem : MonoBehaviour
         private Grid<GridObject> grid;
         public int x;
         public int z;
+        private Transform transform;
 
         public GridObject(Grid<GridObject> grid, int x, int z)
         {
@@ -27,9 +28,26 @@ public class GridPlacementCombatantSystem : MonoBehaviour
             this.z = z;
         }
 
+        public void SetTransform(Transform transform)
+        {
+            this.transform = transform;
+            grid.TriggerGridObjectChanged(x,z);
+        }
+
+        public void ClearTransform()
+        {
+            this.transform = null;
+            grid.TriggerGridObjectChanged(x, z);
+        }
+
+        public bool CanPlace()
+        {
+            return transform == null;
+        }
+
         public override string ToString()
         {
-            return x + ", " + z;
+            return x + ", " + z + "\n" + transform;
         }
     }
 
@@ -38,7 +56,16 @@ public class GridPlacementCombatantSystem : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
-            Instantiate(_testTransform, grid.GetWorldPosition(x, z), Quaternion.identity);
+
+            GridObject gridObject = grid.GetGridObject(x,z);
+            if (gridObject.CanPlace())
+            {
+                Transform placeTransform = Instantiate(_testTransform, grid.GetWorldPosition(x, z), Quaternion.identity);
+                gridObject.SetTransform(placeTransform);
+            } else
+            {
+                UtilsClass.CreateWorldTextPopup("Can't place combatant there", Mouse3D.GetMouseWorldPosition());
+            }
         }
     }
 }
