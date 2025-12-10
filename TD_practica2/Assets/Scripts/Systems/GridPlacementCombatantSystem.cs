@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GridPlacementCombatantSystem : MonoBehaviour
 {
-    [SerializeField] private Transform _testTransform;
+    [SerializeField] private PlayableCharacter _playableCharacter;
     private Grid<GridObject> grid;
 
     private void Awake()
@@ -11,7 +11,7 @@ public class GridPlacementCombatantSystem : MonoBehaviour
         int gridWidth = 10;
         int gridHeight = 5;
         float cellSize = 1f;
-        grid = new Grid<GridObject>(gridWidth, gridHeight, cellSize, Vector3.zero, (Grid<GridObject> g, int x, int z) => new GridObject(g,x,z));
+        grid = new Grid<GridObject>(gridWidth, gridHeight, cellSize, new Vector3(-4.5f,0,-2.5f), (Grid<GridObject> g, int x, int z) => new GridObject(g,x,z));
     }
 
     public class GridObject
@@ -56,11 +56,10 @@ public class GridPlacementCombatantSystem : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
-
             GridObject gridObject = grid.GetGridObject(x,z);
             if (gridObject.CanPlace())
             {
-                Transform placeTransform = Instantiate(_testTransform, grid.GetWorldPosition(x, z), Quaternion.identity);
+                Transform placeTransform = Instantiate(_playableCharacter.characterModel, grid.GetWorldPosition(x, z), Quaternion.identity);
                 gridObject.SetTransform(placeTransform);
             } else
             {

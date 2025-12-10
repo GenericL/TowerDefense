@@ -5,7 +5,6 @@ public class Mouse3D : MonoBehaviour
     public static Mouse3D Instance { get; private set; }
 
     [SerializeField] private LayerMask mouseColliderLayerMask = new LayerMask();
-
     private void Awake()
     {
         Instance = this;
