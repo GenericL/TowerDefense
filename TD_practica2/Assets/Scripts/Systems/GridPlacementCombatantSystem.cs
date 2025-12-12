@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class GridPlacementCombatantSystem : MonoBehaviour
 {
-    [SerializeField] private PlayableCharacter _playableCharacter;
+    private PlayableCharacter _playableCharacter;
+    [SerializeField] private CurrencyManager _currencyManager;
     private Grid<GridObject> grid;
 
     private void Awake()
@@ -53,18 +54,25 @@ public class GridPlacementCombatantSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (_playableCharacter != null && Input.GetMouseButtonDown(0))
         {
             grid.GetXZ(Mouse3D.GetMouseWorldPosition(), out int x, out int z);
-            GridObject gridObject = grid.GetGridObject(x,z);
-            if (gridObject.CanPlace())
+            GridObject gridObject = grid.GetGridObject(x, z);
+            if (gridObject.CanPlace() && _currencyManager.useCurrency(_playableCharacter.cost))
             {
                 Transform placeTransform = Instantiate(_playableCharacter.characterModel, grid.GetWorldPosition(x, z), Quaternion.identity);
                 gridObject.SetTransform(placeTransform);
-            } else
+            }
+            else
             {
                 UtilsClass.CreateWorldTextPopup("Can't place combatant there", Mouse3D.GetMouseWorldPosition());
             }
         }
     }
+
+    public void setCharacter(PlayableCharacter character)
+    {
+        _playableCharacter = character;
+    }
+
 }

@@ -2,7 +2,8 @@
     align-content: auto;
     width: auto;
     height: 20%;
-    top: 40%;
+    top: 20%;
+    -unity-text-align: upper-left;
 }
 
 Button {
@@ -14,4 +15,5 @@ Button {
     min-width: 20%;
     min-height: 30%;
     align-items: stretch;
+    justify-content: space-between;
 }
