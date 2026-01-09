@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 93a874b1b7d92cf4abe1f57ea52fe2e3
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - basicAttack: {fileID: 11400000, guid: 534f8a8569529064ba1f197976a0e377, type: 2}
+  - enhancedBasicAttack: {fileID: 11400000, guid: 63e1c9739ae2b9d48bbf1d843ae99c58, type: 2}
+  - abilityAttack: {fileID: 11400000, guid: 1f56d297604c92341b3860430f953b23, type: 2}
+  - enhancedAbilityAttack: {fileID: 11400000, guid: 5d281d2a27d7270439421b9e3213d644, type: 2}
+  - ultimateAttack: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
