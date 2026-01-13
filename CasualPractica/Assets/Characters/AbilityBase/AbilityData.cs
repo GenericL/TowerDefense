@@ -6,13 +6,11 @@ using UnityEngine;
 public class AbilityData : ScriptableObject
 {
     public string label;
-    [SerializeField] public List<DamageType> damageType;
     [SerializeReference] public List<AbilityEffect> effects;
 
     void OnEnable()
     {
         if (string.IsNullOrEmpty(label)) label = name;
-        if (damageType == null) damageType = new List<DamageType>();
         if (effects == null) effects = new List<AbilityEffect>();
     }
 }
@@ -20,6 +18,9 @@ public class AbilityData : ScriptableObject
 [Serializable]
 public abstract class AbilityEffect
 {
+    public ElementType elementDMG;
+    public DamageType typeDMG;
+
     public abstract void Execute(Character caster, Character[] targets, int principalTarget);
     protected void Damage(Character caster, Character target, float damagePercent)
     {

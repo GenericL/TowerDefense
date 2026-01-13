@@ -6,10 +6,7 @@ public abstract class Enemy : Character
     private int sequence = 0;
     [SerializeField] protected HealthBar healthBar;
 
-    public abstract bool DoTurn(List<Playable> targets, int principalTarget);
-    public abstract bool Basic(List<Playable> targets, int principalTarget);
-    public abstract bool Ability(List<Playable> targets, int principalTarget);
-    public abstract bool Definitive(List<Playable> targets, int principalTarget);
+    public abstract bool DoTurn(Character[] targets, int principalTarget);
     public int GetSequence() { return sequence; }
     public void SetSequence(int sequence) { this.sequence = sequence; }
     public void IncrementSequence() {  sequence++; }

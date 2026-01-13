@@ -31,7 +31,7 @@ public class Grid<T>
                 gridArray[x, z] = createGridObject(this,x,z);
             }
         }
-        bool showDebug = false;
+        bool showDebug = true;
         if(showDebug)
             pintarArray();
         

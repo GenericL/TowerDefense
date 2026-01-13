@@ -14,7 +14,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private List<Transform> playablesPositions = new List<Transform>();
     [SerializeField] private List<Transform> enemiesPositions = new List<Transform>();
 
-    private List<Playable> playableList = new List<Playable>();
+    private Playable[] playableList = new Playable[4];
     private List<Enemy> enemyList = new List<Enemy>();
     [SerializeField] private List<BattleHUD> playablesHUDs = new List<BattleHUD>();
 
@@ -35,7 +35,7 @@ public class BattleSystem : MonoBehaviour
         {
             GameObject playableGO = Instantiate(playables[i], playablesPositions[i]);
             Playable playableUnit = playableGO.GetComponent<Playable>();
-            playableList.Add(playableUnit);
+            playableList[i] = playableUnit;
             playablesHUDs[i].SetHUD(playableUnit);
         }
 
@@ -102,22 +102,21 @@ public class BattleSystem : MonoBehaviour
     public void OnBasicAttackButton()
     {
         if (state != BattleState.PLAYERTURN) return;
-        Debug.Log("Basic attack");
-        bool endTurn = activePlayable.Basic(enemyList, primaryTarget);
+        bool endTurn = activePlayable.Basic(enemyList.ToArray(), primaryTarget);
         UpdateOrCheckEnemyHealth(endTurn);
     }
 
     public void OnAbilityAttackButton()
     {
         if (state != BattleState.PLAYERTURN) return;
-        bool endTurn = activePlayable.Ability(enemyList, primaryTarget);
+        bool endTurn = activePlayable.Ability(enemyList.ToArray(), primaryTarget);
         UpdateOrCheckEnemyHealth(endTurn);
     }
 
     public void OnUltimateButton()
     {
         if (state != BattleState.PLAYERTURN) return;
-        bool endTurn = activePlayable.Definitive(enemyList, primaryTarget);
+        bool endTurn = activePlayable.Definitive(enemyList.ToArray(), primaryTarget);
         UpdateOrCheckEnemyHealth(endTurn);
     }
 
@@ -138,14 +137,14 @@ public class BattleSystem : MonoBehaviour
 
     private void EnemyTurn(Enemy enemy)
     {
-        int target = Random.Range(0, (playableList.Count));
+        int target = Random.Range(0, (playableList.Length));
         while (playableList[target].IsDead())
         {
-            target = Random.Range(0, (playableList.Count));
+            target = Random.Range(0, (playableList.Length));
         }
         bool endTurn = enemy.DoTurn(playableList, target);
 
-        for (int i = 0; i < playableList.Count; i++)
+        for (int i = 0; i < playableList.Length; i++)
         {
             playablesHUDs[i].SetHP(playableList[i].GetCharacterData().GetCurrentHealth());
         }
@@ -173,7 +172,7 @@ public class BattleSystem : MonoBehaviour
     {
         int death = 0;
         playableList.ForEach(item => { if (item.IsDead()) death++; });
-        if (death == playableList.Count) state = BattleState.LOST;
+        if (death == playableList.Length) state = BattleState.LOST;
         else state = BattleState.WAITING_TURN;
     }
 

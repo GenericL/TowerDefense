@@ -19,23 +19,23 @@ public class RedeiScript : Playable
     {
         characterData = new CharacterData("Redei", ElementType.ILLUSION, CharacterType.PLAYABLE, 210, 21, 12, 102);
     }
+    
 
-    public override bool Ability(List<Enemy> targets, int principalTarget)
+    public override bool Ability(Character[] targets, int principalTarget)
     {
         if (enhanced)
         {
-            ExecuteAbility(enhancedAbilityAttack, targets.ToArray(), principalTarget);
+            ExecuteAbility(enhancedAbilityAttack, targets, principalTarget);
             tirano++;
             enhanced = false;
         }
         else { 
-            ExecuteAbility(abilityAttack, targets.ToArray(), principalTarget); 
-            enhanced = true;
+            ExecuteAbility(abilityAttack, targets, principalTarget); 
         }
         return true;
     }
 
-    public override bool Basic(List<Enemy> targets, int principalTarget)
+    public override bool Basic(Character[] targets, int principalTarget)
     {
         if (enhanced)
         {
@@ -46,12 +46,11 @@ public class RedeiScript : Playable
         else
         {
             ExecuteAbility(basicAttack, targets.ToArray(), principalTarget);
-            enhanced = true;
         }
         return true;
     }
 
-    public override bool Definitive(List<Enemy> targets, int principalTarget)
+    public override bool Definitive(Character[] targets, int principalTarget)
     {
         if (rey == 3 || tirano == 3)
         {
@@ -62,5 +61,19 @@ public class RedeiScript : Playable
         }
         Debug.Log("Can't use ultimate");
         return false;
+    }
+
+    public override void InitialPasive()
+    {
+        
+    }
+
+    private bool activatedSoberanoDeLosMonstruos = false;
+    public void SoberanoDeLosMonstruos(DamageType dmgType)
+    {
+        if (dmgType.Equals(DamageType.COORDINATED_ATTACK_DMG) && !activatedSoberanoDeLosMonstruos)
+        {
+            enhanced = true;
+        }
     }
 }

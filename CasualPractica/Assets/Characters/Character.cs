@@ -14,6 +14,9 @@ public abstract class Character : MonoBehaviour
     public bool IsDead() { return isDead; }
     public void Dies() { isDead = true; }
     public void Revives() {  isDead = false; }
+    public abstract bool Basic(Character[] targets, int principalTarget);
+    public abstract bool Ability(Character[] targets, int principalTarget);
+    public abstract bool Definitive(Character[] targets, int principalTarget);
 
     protected void ExecuteAbility(AbilityData abilityData, Character[] targets, int principalTarget)
     {
