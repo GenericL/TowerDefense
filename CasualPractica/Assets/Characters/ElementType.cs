@@ -1,5 +1,8 @@
+
+
 public enum ElementType
 {
+   NONE,
    IGNIS,
    GLACIES,
    NATURA,
@@ -16,6 +19,7 @@ public enum ElementType
 
 public enum DamageType
 {
+    NONE,
     BASIC_DMG,
     ABILITY_DMG,
     ULTIMATE_DMG,
@@ -26,6 +30,7 @@ public enum DamageType
 
 public enum CharacterType
 {
+    NONE,
     ENEMY,
     PLAYABLE,
 }

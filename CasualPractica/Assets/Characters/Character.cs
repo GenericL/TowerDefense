@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public abstract class Character : MonoBehaviour
 {
@@ -12,12 +13,13 @@ public abstract class Character : MonoBehaviour
     public void ResetTurnValue() { turnSystem.Reset(); }
     public int GetTurnValue() { return turnSystem.GetAvanceAproximate(); }
     public bool IsDead() { return isDead; }
-    public void Dies() { isDead = true; }
+    public virtual void Dies() { isDead = true; }
     public void Revives() {  isDead = false; }
     public abstract bool Basic(Character[] targets, int principalTarget);
     public abstract bool Ability(Character[] targets, int principalTarget);
-    public abstract bool Definitive(Character[] targets, int principalTarget);
-
+    public abstract void Definitive(Character[] targets, int principalTarget);
+    public abstract bool DoTurn(Character[] targets, int principalTarget);
+    public abstract void AddListenersToPassiveManager();
     protected void ExecuteAbility(AbilityData abilityData, Character[] targets, int principalTarget)
     {
         foreach (var effect in abilityData.effects)

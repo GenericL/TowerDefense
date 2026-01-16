@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: EnhancedAbilityAttack
   m_EditorClassIdentifier: 
   label: EnhancedAbilityAttack
-  damageType: 0100000003000000
   effects:
   - rid: 5611874536102822090
   references:
@@ -22,5 +21,7 @@ MonoBehaviour:
     - rid: 5611874536102822090
       type: {class: SingleTargetRepeatedDamageEffect, ns: , asm: Assembly-CSharp}
       data:
+        elementDMG: 9
+        typeDMG: 02000000
         damagePercent: 0.45
         amount: 5

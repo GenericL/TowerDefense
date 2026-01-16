@@ -4,9 +4,8 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - characterData: {fileID: 11400000, guid: e49b72feb4813434596b0a2f27f6937a, type: 2}
   - healthBar: {instanceID: 0}
-  - basicAttack: {fileID: 11400000, guid: 534f8a8569529064ba1f197976a0e377, type: 2}
+  - basicAttack: {fileID: 11400000, guid: c66a5bcd6254bc84a9969498d4ce622b, type: 2}
   - enhancedBasicAttack: {fileID: 11400000, guid: 03d67092ec83dd047a5b359722472439, type: 2}
   - abilityAttack: {fileID: 11400000, guid: 5b55714558addb0469770d44dd5cc865, type: 2}
   executionOrder: 0

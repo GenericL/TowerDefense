@@ -28,8 +28,13 @@ public class CriaDeDragonAcidico : Enemy
     {
         return false;
     }
-    public override bool Definitive(Character[] targets, int principalTarget)
+    public override void Definitive(Character[] targets, int principalTarget)
     {
-        return false;
+        
+    }
+
+    public override void AddListenersToPassiveManager()
+    {
+        
     }
 }

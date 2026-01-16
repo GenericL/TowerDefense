@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: BasicAttack
   m_EditorClassIdentifier: 
   label: BasicAttack
-  damageType: 00000000
   effects:
-  - rid: 5611874536102822085
+  - rid: 5611874719553290300
   references:
     version: 2
     RefIds:
-    - rid: 5611874536102822085
+    - rid: 5611874719553290300
       type: {class: SingleTargetDamageEffect, ns: , asm: Assembly-CSharp}
       data:
+        elementDMG: 3
+        typeDMG: 01000000
         damagePercent: 1

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: db9758eed1bd7c744b2b0bf4e64fba52, type: 3}
-  m_Name: EnhancedBasicAttack
+  m_Name: BasicAttack
   m_EditorClassIdentifier: 
-  label: EnhancedBasicAttack
+  label: BasicAttack
   effects:
-  - rid: 5611874536102822084
+  - rid: 5611874719553290301
   references:
     version: 2
     RefIds:
-    - rid: 5611874536102822084
+    - rid: 5611874719553290301
       type: {class: SingleTargetDamageEffect, ns: , asm: Assembly-CSharp}
       data:
-        elementDMG: 9
+        elementDMG: 3
         typeDMG: 01000000
-        damagePercent: 1.6
+        damagePercent: 1

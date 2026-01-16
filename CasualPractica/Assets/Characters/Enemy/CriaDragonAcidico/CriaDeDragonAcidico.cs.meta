@@ -5,7 +5,7 @@ MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - healthBar: {instanceID: 0}
-  - basicAttack: {fileID: 11400000, guid: 534f8a8569529064ba1f197976a0e377, type: 2}
+  - basicAttack: {fileID: 11400000, guid: cf9b72f2169fede4fa1dce9cbe2bb3fc, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

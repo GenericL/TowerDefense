@@ -30,9 +30,8 @@ public class DragonAcidico : Enemy
         return true;
     }
 
-    public override bool Definitive(Character[] targets, int principalTarget)
+    public override void Definitive(Character[] targets, int principalTarget)
     {
-        return false;
     }
 
     public override bool DoTurn(Character[] targets, int principalTarget)
@@ -46,5 +45,10 @@ public class DragonAcidico : Enemy
         {
             return Ability(targets, principalTarget);
         }
+    }
+
+    public override void AddListenersToPassiveManager()
+    {
+        
     }
 }

@@ -30,6 +30,11 @@ public class Observer<T>
     {
         onValueChanged.Invoke(value);
     }
+    public void Invoke(T value)
+    {
+        Set(value);
+        Invoke();
+    }
 
     public void AddListener(UnityAction<T> callback)
     {

@@ -19,11 +19,12 @@ public class AbilityData : ScriptableObject
 public abstract class AbilityEffect
 {
     public ElementType elementDMG;
-    public DamageType typeDMG;
+    public List<DamageType> typeDMG;
 
     public abstract void Execute(Character caster, Character[] targets, int principalTarget);
     protected void Damage(Character caster, Character target, float damagePercent)
     {
+        TriggerObservers(caster);
         float finalDamage = Formulas.i.Damage(caster.GetCharacterData(), target.GetCharacterData(), damagePercent);
         bool defeated = target.GetCharacterData().DamageRecieved(finalDamage);
         if (defeated)
@@ -31,6 +32,18 @@ public abstract class AbilityEffect
             target.Dies();
         }
         Debug.Log($"{caster.name} dealt {finalDamage} damage to {target.name}");
+    }
+
+    private void TriggerObservers(Character origin)
+    {
+        if (origin is Playable playable)
+        {
+            playable.NotifyAbilityUsed(this);
+        }
+        else if (origin is Enemy enemy)
+        {
+            enemy.NotifyAbilityUsed(this);
+        }
     }
 }
 
