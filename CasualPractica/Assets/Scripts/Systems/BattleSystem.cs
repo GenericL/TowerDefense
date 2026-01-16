@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum BattleState
 {
@@ -15,6 +16,7 @@ public class BattleSystem : MonoBehaviour
 
     [SerializeField] private TurnManager turnManager;
     [SerializeField] private DisplayBattleHUD displayBattleHUD;
+    [SerializeField] private AttacksButtons attackButtons;
 
     private BattleState state;
     void Start()
@@ -25,12 +27,12 @@ public class BattleSystem : MonoBehaviour
 
     private void SetupBattle()
     {
-        var playableList = new Playable[playables.Count];
+        var playableList = new List<Playable>();
         for (int i = 0; i < playables.Count || i < playablesPositions.Count; i++)
         {
             GameObject playableGO = Instantiate(playables[i], playablesPositions[i]);
             Playable playableUnit = playableGO.GetComponent<Playable>();
-            playableList[i]=playableUnit;
+            playableList.Add(playableUnit);
         }
 
         var enemyList = new Enemy[5];
@@ -39,7 +41,7 @@ public class BattleSystem : MonoBehaviour
             GameObject enemyGO = Instantiate(enemies[i], enemiesPositions[i]);
             enemyList[i] = enemyGO.GetComponent<Enemy>();
         }
-        turnManager.SetupTurnManager(playableList, enemyList);
+        turnManager.SetupManager(this, attackButtons, playableList.ToArray(),enemyList);
         displayBattleHUD.SetupHUD(turnManager.PlayableList, turnManager.OnUltimateAttackButton);
         turnManager.ExecuteInitialPassives();
 
@@ -67,12 +69,12 @@ public class BattleSystem : MonoBehaviour
 
     private void LostBattle()
     {
-        Debug.Log("Lost");
+        SceneManager.LoadScene(1);
     }
 
     private void WonBattle()
     {
-        Debug.Log("Won");
+        SceneManager.LoadScene(1);
     }
 
     public void SetState(BattleState newState)

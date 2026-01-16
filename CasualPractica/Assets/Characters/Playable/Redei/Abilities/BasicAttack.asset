@@ -22,5 +22,5 @@ MonoBehaviour:
       type: {class: SingleTargetDamageEffect, ns: , asm: Assembly-CSharp}
       data:
         elementDMG: 9
-        typeDMG: 01000000
+        typeDMG: 0100000004000000
         damagePercent: 1

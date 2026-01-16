@@ -31,37 +31,30 @@ public class AdditionalTurnEvent
         additionalTurnQueue?.Invoke();
     }
 }
-public enum TurnState
+public class TurnManager : MonoBehaviour
 {
-    NONE, PLAYER_TURN, ENEMY_TURN
-}
-public class TurnManager : MonoBehaviour 
-{
-    [SerializeField] private BattleSystem battleSystem;
+    private BattleSystem battleSystem;
 
     private Playable[] playableList;
     public Playable[] PlayableList { get { return playableList; } }
     private Enemy[] enemyList;
     public Enemy[] EnemyList { get { return enemyList; } }
 
-    [SerializeField] private AttacksButtons attacksButtons;
+    private AttacksButtons attacksButtons;
 
     private Character active;
 
     private int primaryTarget;
     private bool battleEnded = false;
 
-    public void Awake()
-    {
-        playableList = new Playable[4];
-        enemyList = new Enemy[5];
-        attacksButtons.Initialize(OnBasicAttackButton, OnAbilityAttackButton);
-        attacksButtons.DisableButtons();
-    }
-    public void SetupTurnManager(Playable[] playables, Enemy[] enemies)
+    public void SetupManager(BattleSystem battleSystem, AttacksButtons attacksButtons, Playable[] playables, Enemy[] enemies)
     {
         playableList = playables;
         enemyList = enemies;
+        this.battleSystem = battleSystem;
+        attacksButtons.Initialize(OnBasicAttackButton, OnAbilityAttackButton);
+        attacksButtons.DisableButtons();
+        this.attacksButtons = attacksButtons;
     }
 
     public void StartTurnCycle()
@@ -108,22 +101,22 @@ public class TurnManager : MonoBehaviour
             target = Random.Range(0, (playableList.Length));
         }
         bool endTurn = active.DoTurn(playableList, target);
-        CheckIfPlayablesDead();
-        if (endTurn) SettingState(BattleState.WAITING_TURN);
+        if (CheckIfPlayablesDead()) SettingState(BattleState.LOST);
+        else if (endTurn) SettingState(BattleState.WAITING_TURN);
     }
     public void OnBasicAttackButton()
     {
         bool endTurn = active.Basic(enemyList.ToArray(), primaryTarget);
         attacksButtons.DisableButtons();
-        CheckIfEnemiesDead();
-        if (endTurn) StartTurnCycle();
+        if(CheckIfEnemiesDead()) SettingState(BattleState.WON);
+        else if (endTurn) SettingState(BattleState.WAITING_TURN);
     }
 
     public void OnAbilityAttackButton()
     {
         bool endTurn = active.Ability(enemyList.ToArray(), primaryTarget);
         attacksButtons.DisableButtons();
-        CheckIfEnemiesDead();
+        if (CheckIfEnemiesDead()) SettingState(BattleState.WON);
         if (endTurn) SettingState(BattleState.WAITING_TURN);
     }
     public void OnUltimateAttackButton(Playable caster)
@@ -132,24 +125,39 @@ public class TurnManager : MonoBehaviour
         CheckIfEnemiesDead();
     }
 
-    private void CheckIfEnemiesDead()
+    private bool CheckIfEnemiesDead()
     {
         int deadEnemies = 0;
-        foreach (var enemy in enemyList)
+        for (int i = enemyList.Length-1; i >= 0; i--)
         {
-            if (enemy != null && enemy.IsDead())
+            if (enemyList[i] != null && enemyList[i].IsDead()|| enemyList[i] == null)
             {
                 deadEnemies++;
             }
         }
         if (deadEnemies == enemyList.Length)
-        { 
-            SettingState(BattleState.WON);
+        {
+            Debug.Log("All enemies defeated!");
             battleEnded = true;
+            return true;
+        }
+        CheckIfTargetNotExist();
+        return false;
+    }
+
+    private void CheckIfTargetNotExist()
+    {
+        for (int i = 0; i < enemyList.Length; i++)
+        {
+            if (enemyList[i]!= null && !enemyList[i].IsDead())
+            {
+                primaryTarget = i;
+                return;
+            }
         }
     }
 
-    private void CheckIfPlayablesDead()
+    private bool CheckIfPlayablesDead()
     {
         int deadPlayables = 0;
         foreach (var playable in playableList)
@@ -162,9 +170,10 @@ public class TurnManager : MonoBehaviour
         if (deadPlayables == playableList.Length)
         {
             Debug.Log("All playables defeated!");
-            SettingState(BattleState.LOST);
             battleEnded = true;
+            return true;
         }
+        return false;
     }
 
     private void SettingState(BattleState state)
@@ -175,6 +184,9 @@ public class TurnManager : MonoBehaviour
 
     public void ExecuteInitialPassives()
     {
-        playableList.ForEach(item => item.InitialPasive());
+        playableList.ForEach(item => {
+            item.AddListenersToPassiveManager();
+            item.InitialPasive();
+            });
     }
 }

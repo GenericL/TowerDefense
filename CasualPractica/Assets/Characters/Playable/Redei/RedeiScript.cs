@@ -18,8 +18,8 @@ public class RedeiScript : Playable
 
     private void Awake()
     {
-        characterData = new CharacterData("Redei", ElementType.ILLUSION, CharacterType.PLAYABLE, 210, 21, 12, 102);
-        energySystem = new EnergySystem(0);
+        characterData = new CharacterData("Redei", ElementType.ILLUSION, CharacterType.PLAYABLE, 500, 42, 12, 102);
+        energySystem = new EnergySystem(90);
     }
     
     public override void Dies()
@@ -37,6 +37,7 @@ public class RedeiScript : Playable
         {
             ExecuteAbility(enhancedAbilityAttack, targets, principalTarget);
             Debug.Log("Enhanced Ability used");
+            EnergySystem.RestoreEnergy(30);
             tirano++;
             enhanced = false;
         }
@@ -54,6 +55,7 @@ public class RedeiScript : Playable
         {
             ExecuteAbility(enhancedBasicAttack, targets.ToArray(), principalTarget);
             Debug.Log("Enhanced Basic used");
+            EnergySystem.RestoreEnergy(30);
             rey++;
             enhanced = false;
         }
@@ -87,9 +89,9 @@ public class RedeiScript : Playable
         if (dmgType.Equals(DamageType.COORDINATED_ATTACK_DMG) && !activatedSoberanoDeLosMonstruos)
         {
             enhanced = true;
+
         }
     }
-
     public override bool DoTurn(Character[] targets, int principalTarget)
     {
         // AI logic if wanted
