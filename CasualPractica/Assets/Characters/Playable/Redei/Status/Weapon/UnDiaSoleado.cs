@@ -1,23 +1,15 @@
 using UnityEngine;
 
-public class UnDiaSoleadoFactory : MultiTargetStatusFactory<ReySinPlebeyosData, ReySinPlebeyos> { }
+public class UnDiaSoleadoFactory : MultiTargetStatusFactory<UnDiaSoleadoData, UnDiaSoleado> { }
 
 public struct UnDiaSoleadoData
 {
 
-    public StatModifier<StatModifierData> teamAttackDamageBonus;
+    public StatModifier<StatModifierData> teamAttackDamageBonus => new StatModifier<StatModifierData>(0.5f, new StatModifierData(StatModifierType.MULT));
     public TurnTimer turnDurationTimer => new TurnTimer(true, 2);
-    public UnDiaSoleadoData(Character source)
-    {
-        teamAttackDamageBonus = new StatModifier<StatModifierData>(0.5f, new StatModifierData(StatModifierType.MULT));
-    }
 }
 public class UnDiaSoleado : MultiTargetStatus<UnDiaSoleadoData>
 {
-    public UnDiaSoleado()
-    {
-        data = new UnDiaSoleadoData(source);
-    }
     public override void ApplyStatus()
     {
         PassiveManager.i.onCharacterBasicUsed.AddListener(OnCharacterBasicAttack);
@@ -25,7 +17,7 @@ public class UnDiaSoleado : MultiTargetStatus<UnDiaSoleadoData>
 
     public void OnCharacterBasicAttack(Character source)
     {
-        if (this.source == source)
+        if (this.source.GetCharacterData().GetCharacterName() == source.GetCharacterData().GetCharacterName())
         {
             foreach (Character target in targets)
             {

@@ -18,19 +18,32 @@ public abstract class Character : MonoBehaviour
     public virtual void Dies() { isDead = true; }
     public void Revives() {  isDead = false; }
 
-    public abstract bool Basic(Character[] targets, int principalTarget);
-    public abstract bool Ability(Character[] targets, int principalTarget);
-    public abstract void Definitive(Character[] targets, int principalTarget);
+    public virtual bool Basic(Character[] targets, int principalTarget)
+    {
+        PassiveManager.i.onCharacterBasicUsed.Invoke(this);
+        return true;
+    }
+    public virtual bool Ability(Character[] targets, int principalTarget)
+    {
+        PassiveManager.i.onCharacterAbilityUsed.Invoke(this);
+        return true;
+    }
+    public virtual void Definitive(Character[] targets, int principalTarget)
+    {
+        PassiveManager.i.onCharacterDefinitiveUsed.Invoke(this);
+    }
     public abstract bool DoTurn(Character[] targets, int principalTarget);
     public abstract void AddListenersToPassiveManager();
 
-    public void AddStatus(Status statusFactory)
+    public void AddStatus(Status status)
     {
-        statuses.Add(statusFactory);
+        status.ApplyStatus();
+        statuses.Add(status);
     }
-    public void RemoveStatus(Status statusFactory)
+    public void RemoveStatus(Status status)
     {
-        statuses.Remove(statusFactory);
+        statuses.Find(current => current == status).RemoveStatus();
+        statuses.Remove(status);
     }
     public void UpdateStatuses()
     {

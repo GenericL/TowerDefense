@@ -31,31 +31,54 @@ public class Formulas
         return 1 - defenseTotal / (defenseTotal + 5 * lvlPlayable + 500);
     }
 
-    private float CritDamage(float critRate, float critDamage, float rawDamage)
+    private float CritDamage( float critDamage, float rawDamage)
     {
-        float chance = Random.Range(0,100);
-        if(critRate < chance) return rawDamage;
         return rawDamage * (1 + critDamage);
     }
-
-    public float Damage(CharacterData caster, CharacterData target, float kitMultiplier) 
+    private bool IsCriticalHit(float critRate)
     {
-        if(caster.GetCharacterType() == CharacterType.PLAYABLE)
+        float chance = Random.Range(0, 100);
+        return (critRate < chance);
+    }
+    public float Damage(Character caster, Character target, float kitMultiplier) 
+    {
+        CharacterData casterData = caster.GetCharacterData();
+        CharacterData targetData = target.GetCharacterData();
+        if(casterData.GetCharacterType() == CharacterType.PLAYABLE)
         {
-            float defTarget = CalculateDefenseOfEnemy(caster.GetLevel(), target.GetLevel());
-            float resistence = CalculateResistance(target.GetGeneralRes());
-            float kitDamage = CalculateBaseDamage(kitMultiplier, caster.GetFinalAttack());
+            float defTarget = CalculateDefenseOfEnemy(casterData.GetLevel(), targetData.GetLevel());
+            float resistence = CalculateResistance(targetData.GetGeneralRes());
+            float kitDamage = CalculateBaseDamage(kitMultiplier, casterData.GetFinalAttack());
 
             //caster.GetCritChance(), caster.GetCritDamage(), kitMultiplier * defTarget * resistence
-            return CritDamage(caster.GetCritChance(), caster.GetCritDamage(), kitDamage * defTarget * resistence);
+            float rawDamage = kitDamage * defTarget * resistence;
+            if (IsCriticalHit(casterData.GetCritChance() * 100))
+            {
+                float totalDamage = CritDamage(casterData.GetCritDamage(), rawDamage);
+                DamagePopUp.Create(target.transform.position, Mathf.Round(totalDamage), true, casterData.GetElementColor());
+                return totalDamage;
+            } else
+            {
+                DamagePopUp.Create(target.transform.position, Mathf.Round(rawDamage), false, casterData.GetElementColor());
+                return rawDamage;
+            }
+
+           
         }
         else
         {
             // TODO: actualizar a (kitMult(1+BaseDMGMultiplier)+flatDMG)*MultBonus*DefTarget*RES*DMGMult
-            float defTarget = CalculateDefenseOfPlayable(target.GetFinalDefense(), target.GetLevel());
-            float resistence = CalculateResistance(target.GetGeneralRes());
-            float kitDamage = CalculateBaseDamage(kitMultiplier, caster.GetFinalAttack());
-            return CritDamage(caster.GetCritChance()*100, caster.GetCritDamage(), kitDamage * defTarget * resistence);
+            float defTarget = CalculateDefenseOfPlayable(targetData.GetFinalDefense(), targetData.GetLevel());
+            float resistence = CalculateResistance(targetData.GetGeneralRes());
+            float kitDamage = CalculateBaseDamage(kitMultiplier, casterData.GetFinalAttack());
+            float rawDamage = kitDamage * defTarget * resistence;
+            if (IsCriticalHit(casterData.GetCritChance() * 100)){
+                float totalDamage = CritDamage(casterData.GetCritDamage(), rawDamage);
+                return totalDamage;
+            } else
+            {
+                return rawDamage;
+            }
         }
     }
 }

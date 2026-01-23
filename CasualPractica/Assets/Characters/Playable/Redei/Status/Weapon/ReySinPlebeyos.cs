@@ -1,38 +1,29 @@
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class ReySinPlebeyosFactory : MultiTargetStatusFactory<ReySinPlebeyosData, ReySinPlebeyos> { }
 
 public struct ReySinPlebeyosData
 {
     public bool enabled;
-    public StatModifier<StatModifierData> selfAttackDamageBonus;
+    public StatModifier<StatModifierData> selfAttackDamageBonus => new StatModifier<StatModifierData>(0.48f, new StatModifierData(StatModifierType.MULT, this));
     public UnDiaSoleado unDiaSoleado;
     public UnDiaNublado unDiaNublado;
-
-    public ReySinPlebeyosData(Character source, Character[] targets)
-    {
-        enabled = false;
-        selfAttackDamageBonus = new StatModifier<StatModifierData>(0.48f, new StatModifierData(StatModifierType.MULT, source));
-        unDiaSoleado = (UnDiaSoleado)new UnDiaSoleadoFactory().GetStatus(targets, source);
-        unDiaNublado = (UnDiaNublado)new UnDiaNubladoFactory().GetStatus(source, source);
-    }
 }
 
 public class ReySinPlebeyos : MultiTargetStatus<ReySinPlebeyosData>
 {
-    public ReySinPlebeyos()
-    {
-        data = new ReySinPlebeyosData(source, targets);
-    }
     public override void ApplyStatus()
     {
-        data.enabled = true;
+        data.enabled = false;
+        data.unDiaSoleado = (UnDiaSoleado)new UnDiaSoleadoFactory().GetStatus(targets, source);
+        data.unDiaNublado = (UnDiaNublado)new UnDiaNubladoFactory().GetStatus(source, source);
         PassiveManager.i.onCharacterDefinitiveUsed.AddListener(OnCharacterUltimate);
     }
 
     public void OnCharacterUltimate(Character source)
     {
-        if (this.source == source)
+        if (this.source.GetCharacterData().GetCharacterName() == source.GetCharacterData().GetCharacterName())
         {
             data.enabled = !data.enabled;
             if (data.enabled)

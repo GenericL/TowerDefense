@@ -4,32 +4,23 @@ public class UnDiaNubladoFactory : SingleTargetStatusFactory<UnDiaNubladoData, U
 
 public struct UnDiaNubladoData
 {
-    public StatModifier<StatModifierData> selfCritDamageBonusUnDiaNublado;
-    public int maxUnDiaNubladoStacks;
+    public StatModifier<StatModifierData> selfCritDamageBonusUnDiaNublado => new StatModifier<StatModifierData>(0.07f, new StatModifierData(StatModifierType.MULT));
+    public int maxUnDiaNubladoStacks => 8;
     public int currentUnDiaNubladoStacks;
-    public UnDiaNubladoData(Character source)
-    {
-        this.selfCritDamageBonusUnDiaNublado = new StatModifier<StatModifierData>(0.07f, new StatModifierData(StatModifierType.MULT));
-        this.maxUnDiaNubladoStacks = 8;
-        this.currentUnDiaNubladoStacks = 0;
-    }
 }
 
 public class UnDiaNublado : SingleTargetStatus<UnDiaNubladoData>
 {
-    public UnDiaNublado()
-    {
-        data = new UnDiaNubladoData(source);
-    }
     public override void ApplyStatus()
     {
+        data.currentUnDiaNubladoStacks = 0;
         PassiveManager.i.onCharacterAbilityUsed.AddListener(OnSelfCharacterAbility);
         PassiveManager.i.onCharacterEndTurn.AddListener(OnEndTurn);
     }
 
     public void OnSelfCharacterAbility(Character source)
     {
-        if (source != this.source)
+        if (this.source.GetCharacterData().GetCharacterName() != source.GetCharacterData().GetCharacterName())
         {
             return;
         }
@@ -42,7 +33,7 @@ public class UnDiaNublado : SingleTargetStatus<UnDiaNubladoData>
     }
     public void OnEndTurn(Character source)
     {
-        if (source != this.source)
+        if (this.source.GetCharacterData().GetCharacterName() != source.GetCharacterData().GetCharacterName())
         {
             return;
         }

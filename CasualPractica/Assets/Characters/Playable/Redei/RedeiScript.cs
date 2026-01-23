@@ -54,7 +54,7 @@ public class RedeiScript : Playable
         {
             ExecuteAbility(abilityAttack, targets, principalTarget); 
         }
-        return true;
+        return base.Ability(targets,principalTarget);
     }
 
     public override bool Basic(Character[] targets, int principalTarget)
@@ -77,7 +77,7 @@ public class RedeiScript : Playable
         {
             ExecuteAbility(basicAttack, targets.ToArray(), principalTarget);
         }
-        return true;
+        return base.Basic(targets, principalTarget);
     }
 
     public override void Definitive(Character[] targets, int principalTarget)
@@ -87,7 +87,9 @@ public class RedeiScript : Playable
             rey = 0;
             tirano = 0;
             EnergySystem.ConsumeAllEnergy();
-        }
+            base.Definitive(targets, principalTarget);
+        } else
+            Debug.Log("Can't use ultimate: rey = " + rey + ", tirano = " + tirano);
     }
 
     public override void InitialPasive(Enemy[] enemies, Playable[] playables)
@@ -101,7 +103,6 @@ public class RedeiScript : Playable
         if (dmgType.Equals(DamageType.COORDINATED_ATTACK_DMG) && !activatedSoberanoDeLosMonstruos)
         {
             enhanced = true;
-
         }
     }
     public override bool DoTurn(Character[] targets, int principalTarget)

@@ -42,6 +42,7 @@ public class EnergySystem
         if (currentEnergy >= energy)
         {
             currentEnergy -= energy;
+            onEnergyChanged.Invoke(currentEnergy);
             return true;
         }
         return false;
@@ -50,7 +51,8 @@ public class EnergySystem
     {
         if (currentEnergy == maxEnergy)
         {
-            currentEnergy = 5;
+            currentEnergy = 0;
+            onEnergyChanged.Invoke(currentEnergy);
             return true;
         }
         return false;
@@ -63,6 +65,7 @@ public class EnergySystem
 
     internal void ConsumeAllEnergy()
     {
-        currentEnergy = 5;
+        currentEnergy = 0;
+        onEnergyChanged.Invoke(currentEnergy);
     }
 }

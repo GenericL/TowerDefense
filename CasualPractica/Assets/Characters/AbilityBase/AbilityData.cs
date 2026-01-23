@@ -25,13 +25,12 @@ public abstract class AbilityEffect
     protected void Damage(Character caster, Character target, float damagePercent)
     {
         TriggerObservers(caster);
-        float finalDamage = Formulas.i.Damage(caster.GetCharacterData(), target.GetCharacterData(), damagePercent);
+        float finalDamage = Formulas.i.Damage(caster, target, damagePercent);
         bool defeated = target.GetCharacterData().DamageRecieved(finalDamage);
         if (defeated)
         {
             target.Dies();
         }
-        Debug.Log($"{caster.name} dealt {finalDamage} damage to {target.name}");
     }
 
     private void TriggerObservers(Character origin)
