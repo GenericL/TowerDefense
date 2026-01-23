@@ -81,11 +81,11 @@ class AoEDamageEffect : AbilityEffect
 
     public override void Execute(Character caster, Character[] targets, int principalTarget)
     {
-        if (principalTarget != 0 && principalTarget-1 != null)
+        if (principalTarget != 0 && targets[principalTarget - 1] != null)
         {
             Damage(caster, targets[principalTarget - 1], adhancedDamagePercent);
         }
-        if (targets.Length > 1 && principalTarget+1 != null && principalTarget+1 != targets.Length)
+        if (targets.Length > 1 && principalTarget + 1 != targets.Length && targets[principalTarget + 1] != null )
         {
             Damage(caster, targets[principalTarget + 1], adhancedDamagePercent);
         }

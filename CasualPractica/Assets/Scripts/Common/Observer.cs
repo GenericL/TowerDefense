@@ -12,7 +12,7 @@ public class Observer<T>
         get => value; 
         set => Set(value);
     }
-    public Observer(T value, UnityAction<T> callback = null)
+    public Observer(T value = default, UnityAction<T> callback = null)
     {
         this.value = value;
         onValueChanged = new UnityEvent<T>();

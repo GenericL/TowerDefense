@@ -6,7 +6,8 @@ public abstract class Playable : Character
 {
     protected EnergySystem energySystem;
     public EnergySystem EnergySystem { get { return energySystem; } }
-    public abstract void InitialPasive();
+    public abstract void InitialSetup(Enemy[] enemies, Playable[] playables);
+    public abstract void InitialPasive(Enemy[] enemies, Playable[] playables);
 
     internal void NotifyAbilityUsed(AbilityEffect abilityEffect)
     {

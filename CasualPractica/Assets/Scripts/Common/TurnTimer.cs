@@ -3,6 +3,7 @@
 public class TurnTimer
 {
     private readonly bool timer;
+    private int originalTurn;
     private int turnsLeft;
 
     public TurnTimer() : this(false, 0){}
@@ -10,10 +11,11 @@ public class TurnTimer
     public TurnTimer(bool timer, int turnsLeft)
     {
         this.timer = timer;
+        this.originalTurn = turnsLeft;
         this.turnsLeft = turnsLeft;
     }
 
-    public bool tick()
+    public bool Tick()
     {
         if (timer)
         {
@@ -22,6 +24,12 @@ public class TurnTimer
         }
         return false;
     }
-
-    public int getTurnsLeft() { return turnsLeft; }
+    public void ResetTimer()
+    {
+        if (timer)
+        {
+            turnsLeft = originalTurn;
+        }
+    }
+    public int GetTurnsLeft() { return turnsLeft; }
 }

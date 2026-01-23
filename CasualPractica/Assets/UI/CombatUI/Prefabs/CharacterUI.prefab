@@ -272,9 +272,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3896606021024911254}
-        m_TargetAssemblyTypeName: UltimateButtonUI, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 8942527465971110095}
+        m_TargetAssemblyTypeName: BattleHUD, Assembly-CSharp
+        m_MethodName: OnClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -60,6 +60,7 @@ public struct CharacterData
     public bool DamageRecieved(float damage) { return healthSystem.Damage(damage); }
     public void HealingRecieved(float heal) { healthSystem.Heal(heal); }
 
+    // Getters
     public float GetFinalAttack()
     {
         return attack.FinalValue;
@@ -83,6 +84,7 @@ public struct CharacterData
     public float GetPercentHealth() { return healthSystem.GetHealthPercent(); }
     public Color GetElementColor() { return elementColor; }
 
+    // Add Modifiers
     public void AddAttackModifier(StatModifier<StatModifierData> modifier) { attack.AddModifier(modifier); }
     public void AddDefenseModifier(StatModifier<StatModifierData> modifier) { defense.AddModifier(modifier); }
     public void AddSpeedModifier(StatModifier<StatModifierData> modifier) { speed.AddModifier(modifier); }
@@ -91,6 +93,7 @@ public struct CharacterData
     public void AddCritDamagerModifier(StatModifier<StatModifierData> modifier) { critDamage.AddModifier(modifier); }
     public void AddMaxHealthModifier(StatModifier<StatModifierData> modifier) { healthSystem.AddModifier(modifier); }
 
+    // Setters
     public void SetAttackBaseValue(float newBase) { attack.BaseValue = newBase; }
     public void SetDefenseBaseValue(float newBase) { defense.BaseValue = newBase; }
     public void SetSpeedBaseValue(float newBase) { speed.BaseValue = newBase; }
@@ -105,6 +108,16 @@ public struct CharacterData
         healthSystem.AddMaxHealthEvent(callback);
     }
 
+    // Remove Modifiers
+    public void RemoveAttackModifier(StatModifier<StatModifierData> modifier) { attack.RemoveModifier(modifier); }
+    public void RemoveDefenseModifier(StatModifier<StatModifierData> modifier) { defense.RemoveModifier(modifier); }
+    public void RemoveSpeedModifier(StatModifier<StatModifierData> modifier) { speed.RemoveModifier(modifier); }
+    public void RemoveGeneralResModifier(StatModifier<StatModifierData> modifier) { generalRes.RemoveModifier(modifier); }
+    public void RemoveCritChanceModifier(StatModifier<StatModifierData> modifier) { critChance.RemoveModifier(modifier); }
+    public void RemoveCritDamagerModifier(StatModifier<StatModifierData> modifier) { critDamage.RemoveModifier(modifier); }
+    public void RemoveMaxHealthModifier(StatModifier<StatModifierData> modifier) { healthSystem.RemoveModifier(modifier); }
+
+    // Remove Events
     public void RemoveHealthEvent(UnityAction<float> callback)
     {
         healthSystem.RemoveHealthEvent(callback);
@@ -113,4 +126,5 @@ public struct CharacterData
     {
         healthSystem.RemoveMaxHealthEvent(callback);
     }
+
 }

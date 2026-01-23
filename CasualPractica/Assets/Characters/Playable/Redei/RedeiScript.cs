@@ -18,10 +18,13 @@ public class RedeiScript : Playable
 
     private void Awake()
     {
-        characterData = new CharacterData("Redei", ElementType.ILLUSION, CharacterType.PLAYABLE, 500, 42, 12, 102);
-        energySystem = new EnergySystem(90);
+        characterData = new CharacterData("Redei", ElementType.ILLUSION, CharacterType.PLAYABLE, 800, 12, 12, 102);
+        energySystem = new EnergySystem(3);
     }
-    
+    public override void InitialSetup(Enemy[] enemies, Playable[] playables)
+    {
+        AddStatus((RedeiWeapon)new RedeiWeaponFactory().GetStatus(playables,this));
+    }
     public override void Dies()
     {
         PassiveManager.i.onDamageOnEnemyTypeActivated.RemoveListener(SoberanoDeLosMonstruos);
@@ -36,14 +39,19 @@ public class RedeiScript : Playable
         if (enhanced)
         {
             ExecuteAbility(enhancedAbilityAttack, targets, principalTarget);
-            Debug.Log("Enhanced Ability used");
-            EnergySystem.RestoreEnergy(30);
             tirano++;
+            if (rey < tirano)
+            {
+                EnergySystem.RestoreEnergy(1);
+            }
+            if (tirano > 3)
+            {
+                tirano = 3;
+            }
             enhanced = false;
         }
         else
         {
-            Debug.Log("Ability used");
             ExecuteAbility(abilityAttack, targets, principalTarget); 
         }
         return true;
@@ -54,14 +62,19 @@ public class RedeiScript : Playable
         if (enhanced)
         {
             ExecuteAbility(enhancedBasicAttack, targets.ToArray(), principalTarget);
-            Debug.Log("Enhanced Basic used");
-            EnergySystem.RestoreEnergy(30);
             rey++;
+            if(rey > tirano)
+            {
+                EnergySystem.RestoreEnergy(1);
+            }
+            if(rey > 3)
+            {
+                rey = 3;
+            }
             enhanced = false;
         }
         else
         {
-            Debug.Log("Basic used");
             ExecuteAbility(basicAttack, targets.ToArray(), principalTarget);
         }
         return true;
@@ -73,12 +86,11 @@ public class RedeiScript : Playable
         {
             rey = 0;
             tirano = 0;
-            Debug.Log("State changed!");
+            EnergySystem.ConsumeAllEnergy();
         }
-        Debug.Log("Can't use ultimate");
     }
 
-    public override void InitialPasive()
+    public override void InitialPasive(Enemy[] enemies, Playable[] playables)
     {
         PassiveManager.i.onDamageOnEnemyTypeActivated.AddListener(SoberanoDeLosMonstruos);
     }
@@ -97,6 +109,4 @@ public class RedeiScript : Playable
         // AI logic if wanted
         return true;
     }
-
-    
 }

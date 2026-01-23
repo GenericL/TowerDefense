@@ -29,7 +29,7 @@ public readonly struct StatModifier<T> : IComparable<StatModifier<T>>, IEquatabl
 
     public bool Equals(StatModifier<T> other)
     {
-        return value == other.value && data.Equals(other.data) && timer?.getTurnsLeft() == other.timer?.getTurnsLeft();
+        return value == other.value && data.Equals(other.data) && timer?.GetTurnsLeft() == other.timer?.GetTurnsLeft();
     }
 
     public override bool Equals(object obj)
@@ -44,7 +44,7 @@ public readonly struct StatModifier<T> : IComparable<StatModifier<T>>, IEquatabl
 
     public void UpdateTimer()
     {
-        timer?.tick();
+        timer?.Tick();
     }
 
     public static bool operator ==(StatModifier<T> left, StatModifier<T> right)

@@ -49,4 +49,9 @@ public class BattleHUD : MonoBehaviour
     {
         OnUltimateButtonPressed?.Invoke();
     }
+
+    internal void SetHUD(Playable character, object v)
+    {
+        throw new NotImplementedException();
+    }
 }

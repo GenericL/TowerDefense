@@ -1,10 +1,12 @@
+using Sirenix.Utilities;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public enum BattleState
 {
-    WON, LOST, WAITING_TURN
+    PLAYERTURN, ENEMYTURN, WON, LOST, WAITING_TURN
 }
 public class BattleSystem : MonoBehaviour
 {
@@ -14,11 +16,17 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private List<Transform> playablesPositions = new List<Transform>();
     [SerializeField] private List<Transform> enemiesPositions = new List<Transform>();
 
-    [SerializeField] private TurnManager turnManager;
+    private Playable[] playableList;
+    private Enemy[] enemyList;
     [SerializeField] private DisplayBattleHUD displayBattleHUD;
     [SerializeField] private AttacksButtons attackButtons;
 
+    private Character active;
+
+    private int primaryTarget;
+
     private BattleState state;
+    private bool battleEnded = false;
     void Start()
     {
         state = BattleState.WAITING_TURN;
@@ -34,27 +42,41 @@ public class BattleSystem : MonoBehaviour
             Playable playableUnit = playableGO.GetComponent<Playable>();
             playableList.Add(playableUnit);
         }
+        this.playableList = playableList.ToArray();
 
-        var enemyList = new Enemy[5];
+        enemyList = new Enemy[5];
         for (int i = 0; i < enemies.Count || i < enemiesPositions.Count; i++)
         {
             GameObject enemyGO = Instantiate(enemies[i], enemiesPositions[i]);
             enemyList[i] = enemyGO.GetComponent<Enemy>();
         }
-        turnManager.SetupManager(this, attackButtons, playableList.ToArray(),enemyList);
-        displayBattleHUD.SetupHUD(turnManager.PlayableList, turnManager.OnUltimateAttackButton);
-        turnManager.ExecuteInitialPassives();
+        attackButtons.Initialize(OnBasicAttackButton, OnAbilityAttackButton);
+        attackButtons.DisableButtons();
+        displayBattleHUD.SetupHUD(this.playableList, OnUltimateAttackButton);
+        ExecuteInitialSetup();
 
         CheckState();
     }
 
-    public void CheckState()
+    private void ExecuteInitialSetup()
+    {
+        playableList.ForEach(item => {
+            item.AddListenersToPassiveManager();
+            item.InitialSetup(enemyList, playableList);
+        });
+        playableList.ForEach(item => {
+            item.AddListenersToPassiveManager();
+            item.InitialPasive(enemyList, playableList);
+        });
+    }
+
+    private void CheckState()
     {
 
         switch (state)
         {
             case BattleState.WAITING_TURN:
-                turnManager.StartTurnCycle();
+                WaitingTurn();
                 break;
             case BattleState.WON:
                 WonBattle();
@@ -67,18 +89,167 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    private void WaitingTurn()
+    {
+        AdditionalTurnManager.i.Invoke();
+
+        while (!battleEnded)
+        {
+            foreach (var playable in playableList)
+            {
+                if (playable.GetTurn() && !playable.IsDead())
+                {
+                    active = playable;
+                    PlayerAction();
+                    return;
+                }
+            }
+            foreach (var enemy in enemyList)
+            {
+                if (enemy != null && enemy.GetTurn() && !enemy.IsDead())
+                {
+                    active = enemy;
+                    EnemyTurn();
+                    return;
+                }
+            }
+        }
+    }
+
+    public void PlayerAction()
+    {
+        attackButtons.EnableButtons();
+        attackButtons.SetColors(active.GetCharacterData().GetElementColor());
+        Debug.Log("Playable Turn: " + active.GetCharacterData().GetCharacterName());
+        active.UpdateStatuses();
+        // Camera focus on activePlayable
+    }
+
+    public void OnBasicAttackButton()
+    {
+        bool endTurn = active.Basic(enemyList.ToArray(), primaryTarget);
+        attackButtons.DisableButtons();
+        if (CheckIfEnemiesDead()) SettingState(BattleState.WON);
+        else if (endTurn)
+        {
+            attackButtons.DisableButtons();
+            SettingState(BattleState.WAITING_TURN);
+        }
+    }
+
+    public void OnAbilityAttackButton()
+    {
+        bool endTurn = active.Ability(enemyList.ToArray(), primaryTarget);
+        if (CheckIfEnemiesDead()) SettingState(BattleState.WON);
+        else if (endTurn)
+        {
+            attackButtons.DisableButtons();
+            SettingState(BattleState.WAITING_TURN);
+        }
+    }
+    public void OnUltimateAttackButton(Playable caster)
+    {
+        caster.Definitive(enemyList.ToArray(), primaryTarget);
+        CheckIfEnemiesDead();
+    }
+
+    private bool CheckIfEnemiesDead()
+    {
+        int deadEnemies = 0;
+        for (int i = enemyList.Length - 1; i >= 0; i--)
+        {
+            if (enemyList[i] != null && enemyList[i].IsDead() || enemyList[i] == null)
+            {
+                deadEnemies++;
+            }
+        }
+        if (deadEnemies == enemyList.Length)
+        {
+            Debug.Log("All enemies defeated!");
+            battleEnded = true;
+            return true;
+        }
+        CheckIfTargetNotExist();
+        return false;
+    }
+    private void CheckIfTargetNotExist()
+    {
+        for (int i = 0; i < enemyList.Length; i++)
+        {
+            if (enemyList[i] != null && !enemyList[i].IsDead())
+            {
+                primaryTarget = i;
+                return;
+            }
+        }
+    }
+
+    public void EnemyTurn()
+    {
+        Debug.Log("Enemy Turn: " + active.name);
+        int target = Random.Range(0, (playableList.Length));
+        while (playableList[target].IsDead())
+        {
+            target = Random.Range(0, (playableList.Length));
+        }
+        bool endTurn = active.DoTurn(playableList, target);
+        if (CheckIfPlayablesDead()) SettingState(BattleState.LOST);
+        else if (endTurn) SettingState(BattleState.WAITING_TURN);
+    }
+    private bool CheckIfPlayablesDead()
+    {
+        int deadPlayables = 0;
+        foreach (var playable in playableList)
+        {
+            if (playable.IsDead())
+            {
+                deadPlayables++;
+            }
+        }
+        if (deadPlayables == playableList.Length)
+        {
+            Debug.Log("All playables defeated!");
+            battleEnded = true;
+            return true;
+        }
+        return false;
+    }
+
     private void LostBattle()
     {
-        SceneManager.LoadScene(1);
+        Debug.Log("Lost");
     }
 
     private void WonBattle()
     {
-        SceneManager.LoadScene(1);
+        Debug.Log("Won");
+    }
+    private void SettingState(BattleState state)
+    {
+        this.state = state;
+        CheckState();
+    }
+    private void Update()
+    {
+        if (state == BattleState.PLAYERTURN)
+        {
+            OnLeft();
+            OnRight();
+        }
     }
 
-    public void SetState(BattleState newState)
+    private void OnLeft()
     {
-        state = newState;
+        if (Input.GetKeyDown(KeyCode.A) && primaryTarget > 0)
+        {
+            primaryTarget--;
+        }
+    }
+    void OnRight()
+    {
+        if (Input.GetKeyDown(KeyCode.D) && enemiesPositions.Count - 1 > primaryTarget)
+        {
+            primaryTarget++;
+        }
     }
 }

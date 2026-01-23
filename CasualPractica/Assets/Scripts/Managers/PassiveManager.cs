@@ -20,5 +20,11 @@ public class PassiveManager
     public Observer<DamageType> onDamageOnEnemyTypeActivated = new Observer<DamageType>(DamageType.NONE);
     public Observer<ElementType> onElementOnEnemyTypeActivated = new Observer<ElementType>(ElementType.NONE);
 
+    public Observer<Character> onCharacterAbilityUsed = new Observer<Character>();
+    public Observer<Character> onCharacterBasicUsed = new Observer<Character>();
+    public Observer<Character> onCharacterDefinitiveUsed = new Observer<Character>();
+
+    public Observer<Character> onCharacterStartTurn = new Observer<Character>();
+    public Observer<Character> onCharacterEndTurn = new Observer<Character>();
 
 }

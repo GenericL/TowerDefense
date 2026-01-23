@@ -8,8 +8,8 @@ public class PercentageStatType : Stat
     {
         // base + modificadorTotal + modificadorExterno
         float finalValue = baseValue;
-        finalValue += (1-stats[(int)StatModifierType.MULT_TOTAL].FinalValue);
         finalValue += (1-stats[(int)StatModifierType.MULT].FinalValue);
+        finalValue += (1 - stats[(int)StatModifierType.MULT_TOTAL].FinalValue);
         return finalValue;
     }
 }

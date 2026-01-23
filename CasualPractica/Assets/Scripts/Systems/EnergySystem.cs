@@ -31,6 +31,7 @@ public class EnergySystem
     {
         currentEnergy += energy;
         if (currentEnergy > maxEnergy) currentEnergy = maxEnergy;
+        onEnergyChanged.Invoke(currentEnergy);
     }
     public float GetEnergyPercent()
     {
@@ -58,5 +59,10 @@ public class EnergySystem
     internal void SetEnergyEvent(UnityAction<int> setEnergy)
     {
         onEnergyChanged.AddListener(setEnergy);
+    }
+
+    internal void ConsumeAllEnergy()
+    {
+        currentEnergy = 5;
     }
 }
