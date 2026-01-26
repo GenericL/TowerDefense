@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ public class BattleHUD : MonoBehaviour
     [SerializeField] private Slider energySlider;
     [SerializeField] private Gradient energyGradient;
     [SerializeField] private Image energyFill;
+
 
     public event UnityAction OnUltimateButtonPressed;
 

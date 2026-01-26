@@ -13,13 +13,13 @@ public class DragonAcidico : Enemy
         characterData = new CharacterData("Dragon Acidico", ElementType.NATURA, CharacterType.ENEMY, 325, 26, 10, 105);
         healthBar.SetMaxHealth(325);
     }
-    public override bool Ability(Character[] targets, int principalTarget)
+    public override bool Ability(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         ExecuteAbility(abilityAttack, targets, principalTarget);
         return true;
     }
 
-    public override bool Basic(Character[] targets, int principalTarget)
+    public override bool Basic(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         if (Random.Range(0, 2) == 0) {
             ExecuteAbility(basicAttack, targets, principalTarget);
@@ -30,20 +30,20 @@ public class DragonAcidico : Enemy
         return true;
     }
 
-    public override void Definitive(Character[] targets, int principalTarget)
+    public override void Definitive(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
     }
 
-    public override bool DoTurn(Character[] targets, int principalTarget)
+    public override bool DoTurn(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         int attack = Random.Range(0, 100);
         if (attack < 75)
         {
-            return Basic(targets, principalTarget);
+            return Basic(targets, principalTarget, abilityPoints);
         }
         else
         {
-            return Ability(targets, principalTarget);
+            return Ability(targets, principalTarget, abilityPoints);
         }
     }
 

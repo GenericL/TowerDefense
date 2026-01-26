@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -6,14 +7,22 @@ public class AttacksButtons: MonoBehaviour
 {
     [SerializeField] private Button basicAttackButton;
     [SerializeField] private Button abilityAttackButton;
+    [SerializeField] private TextMeshProUGUI abilityPointUI;
 
     private event UnityAction onBasicAttack;
     private event UnityAction onAbilityAttack;
 
-    public void Initialize(UnityAction onBasicAttack, UnityAction onAbilityAttack)
+    public void Initialize(UnityAction onBasicAttack, UnityAction onAbilityAttack, AbilityPointSystem abilityPointSystem)
     {
         this.onBasicAttack = onBasicAttack;
         this.onAbilityAttack = onAbilityAttack;
+
+        abilityPointSystem.AddAbilityPointEvent(setAP);
+    }
+
+    public void setAP(int point)
+    {
+        abilityPointUI.text = "AP: " + point;
     }
 
     public void DisableButtons()

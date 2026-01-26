@@ -10,7 +10,7 @@ public class CriaDeDragonAcidico : Enemy
         healthBar.SetMaxHealth(125);
     }
 
-    public override bool Basic(Character[] targets, int principalTarget)
+    public override bool Basic(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         foreach (var effect in basicAttack.effects)
         {
@@ -19,16 +19,16 @@ public class CriaDeDragonAcidico : Enemy
         return true;
     }
 
-    public override bool DoTurn(Character[] targets, int principalTarget)
+    public override bool DoTurn(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
-        return Basic(targets, principalTarget);
+        return Basic(targets, principalTarget, abilityPoints);
     }
 
-    public override bool Ability(Character[] targets, int principalTarget)
+    public override bool Ability(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         return false;
     }
-    public override void Definitive(Character[] targets, int principalTarget)
+    public override void Definitive(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         
     }

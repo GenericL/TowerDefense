@@ -34,7 +34,7 @@ public class RedeiScript : Playable
     {
         PassiveManager.i.onDamageOnEnemyTypeActivated.AddListener(SoberanoDeLosMonstruos);
     }
-    public override bool Ability(Character[] targets, int principalTarget)
+    public override bool Ability(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         if (enhanced)
         {
@@ -49,15 +49,17 @@ public class RedeiScript : Playable
                 tirano = 3;
             }
             enhanced = false;
+            return base.Ability(targets, principalTarget, abilityPoints);
         }
-        else
+        else if (abilityPoints.DecreaseAbilityPoint())
         {
-            ExecuteAbility(abilityAttack, targets, principalTarget); 
+            ExecuteAbility(abilityAttack, targets, principalTarget);
+            return base.Ability(targets, principalTarget, abilityPoints);
         }
-        return base.Ability(targets,principalTarget);
+        return false;
     }
 
-    public override bool Basic(Character[] targets, int principalTarget)
+    public override bool Basic(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         if (enhanced)
         {
@@ -76,18 +78,19 @@ public class RedeiScript : Playable
         else
         {
             ExecuteAbility(basicAttack, targets.ToArray(), principalTarget);
+            abilityPoints.IncrementAbilityPoint();
         }
-        return base.Basic(targets, principalTarget);
+        return base.Basic(targets, principalTarget, abilityPoints);
     }
 
-    public override void Definitive(Character[] targets, int principalTarget)
+    public override void Definitive(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         if (rey == 3 || tirano == 3)
         {
             rey = 0;
             tirano = 0;
             EnergySystem.ConsumeAllEnergy();
-            base.Definitive(targets, principalTarget);
+            base.Definitive(targets, principalTarget, abilityPoints);
         } else
             Debug.Log("Can't use ultimate: rey = " + rey + ", tirano = " + tirano);
     }
@@ -105,7 +108,7 @@ public class RedeiScript : Playable
             enhanced = true;
         }
     }
-    public override bool DoTurn(Character[] targets, int principalTarget)
+    public override bool DoTurn(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
         // AI logic if wanted
         return true;

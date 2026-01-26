@@ -1,13 +1,12 @@
 
-using Sirenix.Utilities;
-using System.Collections.Generic;
+
 using UnityEngine.Events;
 
 public class HealthSystem
 {
     private BasicStatType maxHealth;
     private float health;
-    private List<StatModifier<StatModifierData>> dotDMG;
+    private float shield;
 
     private Observer<float> onHealthChanged;
     private Observer<float> onMaxHealthChanged;
@@ -16,7 +15,7 @@ public class HealthSystem
     {
         this.health = health;
         onHealthChanged = new Observer<float>(health);
-        dotDMG = new List<StatModifier<StatModifierData>>();
+        shield = 0;
 
         maxHealth = new BasicStatType(health);
         onMaxHealthChanged = new Observer<float>(maxHealth.FinalValue);
@@ -35,6 +34,7 @@ public class HealthSystem
     {
         onHealthChanged.AddListener(callback);
     }
+    public void AddShield(float amount) { shield += amount; }
     public void RemoveModifier(StatModifier<StatModifierData> modifier)
     {
         maxHealth.RemoveModifier(modifier);
@@ -53,6 +53,7 @@ public class HealthSystem
         return maxHealth.FinalValue;
     }
     public float GetCurrentHealth() { return health; }
+    public float GetShield() { return shield; }
 
     public float GetHealthPercent()
     {
@@ -65,29 +66,21 @@ public class HealthSystem
         onMaxHealthChanged?.Invoke(maxHealth.FinalValue);
         onHealthChanged?.Invoke(this.health);
     }
-    public bool TickDoT()
+    public bool Damage(float damage)
     {
         bool death = false;
-        if (!dotDMG.IsNullOrEmpty())
+        float overflowDamage = shield - damage;
+        if (overflowDamage > 0)
         {
-            foreach (var dot in dotDMG)
+            shield = 0;
+            health -= overflowDamage;
+            if (health < 0)
             {
-                death = Damage(dot.value);
-                dot.UpdateTimer();
+                health = 0;
+                death = true;
             }
-        }
-        return death;
-    }
-    public bool Damage(float damage) 
-    { 
-        health -= damage;
-        bool death = false;
-        if (health < 0)
-        {
-            health = 0;
-            death = true;
-        }
-        onHealthChanged?.Invoke(health);
+            onHealthChanged?.Invoke(health);
+        } else shield -= damage;
         return death;
     }
     public void Heal(float heal)
@@ -96,5 +89,4 @@ public class HealthSystem
         if (health > maxHealth.FinalValue) health = maxHealth.FinalValue;
         onHealthChanged?.Invoke(health);
     }
-
 }

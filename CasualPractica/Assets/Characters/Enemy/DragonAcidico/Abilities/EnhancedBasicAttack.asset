@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: EnhancedBasicAttack
   m_EditorClassIdentifier: 
   label: EnhancedBasicAttack
-  damageType: 00000000
   effects:
   - rid: 5611874536102822087
   - rid: 5611874536102822088
@@ -23,9 +22,15 @@ MonoBehaviour:
     - rid: 5611874536102822087
       type: {class: SingleTargetDamageEffect, ns: , asm: Assembly-CSharp}
       data:
+        elementDMG: 3
+        kitMultiplierType: 0
+        typeDMG: 
         damagePercent: 0.5
     - rid: 5611874536102822088
       type: {class: AoEDamageEffect, ns: , asm: Assembly-CSharp}
       data:
+        elementDMG: 3
+        kitMultiplierType: 0
+        typeDMG: 
         principalDamagePercent: 1.2
         adhancedDamagePercent: 0.7

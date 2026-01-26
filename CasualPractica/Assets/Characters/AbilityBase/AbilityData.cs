@@ -19,18 +19,31 @@ public class AbilityData : ScriptableObject
 public abstract class AbilityEffect
 {
     public ElementType elementDMG;
+    public KitMultiplierStatType kitMultiplierType;
     public List<DamageType> typeDMG;
 
     public abstract void Execute(Character caster, Character[] targets, int principalTarget);
     protected void Damage(Character caster, Character target, float damagePercent)
     {
-        TriggerObservers(caster);
-        float finalDamage = Formulas.i.Damage(caster, target, damagePercent);
+        float finalDamage = Formulas.i.Damage(caster, target, damagePercent, elementDMG, kitMultiplierType);
         bool defeated = target.GetCharacterData().DamageRecieved(finalDamage);
         if (defeated)
         {
             target.Dies();
         }
+        TriggerObservers(caster);
+    }
+    protected void Heal(Character caster, Character target, float healPercent, float flatHeal)
+    {
+        float finalHeal = Formulas.i.Heal(caster, target, healPercent, flatHeal, kitMultiplierType);
+        target.GetCharacterData().HealingRecieved(finalHeal);
+        TriggerObservers(caster);
+    }
+    protected void Shield(Character caster, Character target, float shieldPercent, float flatShield)
+    {
+        float finalShield = Formulas.i.Shield(caster, target, shieldPercent, flatShield, kitMultiplierType);
+        target.GetCharacterData().ShieldRecieved(finalShield);
+        TriggerObservers(caster);
     }
 
     private void TriggerObservers(Character origin)
@@ -97,12 +110,11 @@ class AoEDamageEffect : AbilityEffect
 [Serializable]
 class HealingEffect : AbilityEffect
 {
-    public float healing;
+    public float healingPercent;
+    public float flatHealing;
 
     public override void Execute(Character caster, Character[] targets, int principalTarget)
     {
-        // TODO: Actualizarlo con formulas luego
-        targets[principalTarget].GetCharacterData().HealingRecieved(healing);
-        Debug.Log($"{caster.name} healt {healing} to {targets[principalTarget].name}");
+        Heal(caster, targets[principalTarget], healingPercent, flatHealing);
     }
 }

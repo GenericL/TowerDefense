@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: AbilityAttack
   m_EditorClassIdentifier: 
   label: AbilityAttack
-  damageType: 01000000
   effects:
   - rid: 5611874536102822086
   references:
@@ -22,4 +21,7 @@ MonoBehaviour:
     - rid: 5611874536102822086
       type: {class: SingleTargetDamageEffect, ns: , asm: Assembly-CSharp}
       data:
+        elementDMG: 3
+        kitMultiplierType: 0
+        typeDMG: 
         damagePercent: 0.7

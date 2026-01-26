@@ -2,7 +2,6 @@ using Sirenix.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum BattleState
 {
@@ -22,13 +21,14 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private AttacksButtons attackButtons;
 
     private Character active;
-
     private int primaryTarget;
+    private AbilityPointSystem abilityPoints;
 
     private BattleState state;
     private bool battleEnded = false;
     void Start()
     {
+        abilityPoints = new AbilityPointSystem();
         state = BattleState.WAITING_TURN;
         SetupBattle();
     }
@@ -50,7 +50,7 @@ public class BattleSystem : MonoBehaviour
             GameObject enemyGO = Instantiate(enemies[i], enemiesPositions[i]);
             enemyList[i] = enemyGO.GetComponent<Enemy>();
         }
-        attackButtons.Initialize(OnBasicAttackButton, OnAbilityAttackButton);
+        attackButtons.Initialize(OnBasicAttackButton, OnAbilityAttackButton, abilityPoints);
         attackButtons.DisableButtons();
         displayBattleHUD.SetupHUD(this.playableList, OnUltimateAttackButton);
         ExecuteInitialSetup();
@@ -127,7 +127,7 @@ public class BattleSystem : MonoBehaviour
 
     public void OnBasicAttackButton()
     {
-        bool endTurn = active.Basic(enemyList.ToArray(), primaryTarget);
+        bool endTurn = active.Basic(enemyList.ToArray(), primaryTarget, abilityPoints);
         attackButtons.DisableButtons();
         if (CheckIfEnemiesDead()) SettingState(BattleState.WON);
         else if (endTurn)
@@ -139,7 +139,7 @@ public class BattleSystem : MonoBehaviour
 
     public void OnAbilityAttackButton()
     {
-        bool endTurn = active.Ability(enemyList.ToArray(), primaryTarget);
+        bool endTurn = active.Ability(enemyList.ToArray(), primaryTarget, abilityPoints);
         if (CheckIfEnemiesDead()) SettingState(BattleState.WON);
         else if (endTurn)
         {
@@ -149,7 +149,7 @@ public class BattleSystem : MonoBehaviour
     }
     public void OnUltimateAttackButton(Playable caster)
     {
-        caster.Definitive(enemyList.ToArray(), primaryTarget);
+        caster.Definitive(enemyList.ToArray(), primaryTarget, abilityPoints);
         CheckIfEnemiesDead();
     }
 
@@ -192,7 +192,7 @@ public class BattleSystem : MonoBehaviour
         {
             target = Random.Range(0, (playableList.Length));
         }
-        bool endTurn = active.DoTurn(playableList, target);
+        bool endTurn = active.DoTurn(playableList, target, abilityPoints);
         if (CheckIfPlayablesDead()) SettingState(BattleState.LOST);
         else if (endTurn) SettingState(BattleState.WAITING_TURN);
     }
