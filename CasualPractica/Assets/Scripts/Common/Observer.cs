@@ -23,7 +23,6 @@ public class Observer<T>
     {
         if(Equals(this.value, value)) return;
         this.value = value;
-        Invoke();
     }
 
     public void Invoke()

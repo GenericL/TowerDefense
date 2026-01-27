@@ -1,12 +1,11 @@
-
-
+using System.Collections.Generic;
 using UnityEngine.Events;
 
 public class HealthSystem
 {
     private BasicStatType maxHealth;
     private float health;
-    private float shield;
+    private List<ShieldEffect> shields;
 
     private Observer<float> onHealthChanged;
     private Observer<float> onMaxHealthChanged;
@@ -15,7 +14,7 @@ public class HealthSystem
     {
         this.health = health;
         onHealthChanged = new Observer<float>(health);
-        shield = 0;
+        shields = new List<ShieldEffect>();
 
         maxHealth = new BasicStatType(health);
         onMaxHealthChanged = new Observer<float>(maxHealth.FinalValue);
@@ -34,7 +33,21 @@ public class HealthSystem
     {
         onHealthChanged.AddListener(callback);
     }
-    public void AddShield(float amount) { shield += amount; }
+    public void AddShield(ShieldEffect shieldEffect) 
+    {
+        ShieldEffect shield = shields.Find(shield => shield.Equals(shieldEffect.GetCharacter()));
+        if (shield != null)
+        {
+            shields.Find(shield => shield.Equals(shieldEffect.GetCharacter())).AddAmount(shieldEffect.GetAmount());
+        }
+        else
+        {
+            shields.Add(shieldEffect);
+            shields.Sort();
+        }
+    }
+    public void RemoveAllShields() { shields.Clear(); }
+    public void RemoveUsedShields() { shields.RemoveAll(shield => shield.GetAmount() < 1); }
     public void RemoveModifier(StatModifier<StatModifierData> modifier)
     {
         maxHealth.RemoveModifier(modifier);
@@ -53,7 +66,12 @@ public class HealthSystem
         return maxHealth.FinalValue;
     }
     public float GetCurrentHealth() { return health; }
-    public float GetShield() { return shield; }
+    public float GetShield() 
+    {
+        float shield = 0;
+        shields.ForEach(shieldEffect => shield += shieldEffect.GetAmount());
+        return shield; 
+    }
 
     public float GetHealthPercent()
     {
@@ -69,18 +87,24 @@ public class HealthSystem
     public bool Damage(float damage)
     {
         bool death = false;
-        float overflowDamage = shield - damage;
-        if (overflowDamage > 0)
+        float overflowDamage = -damage;
+        shields.ForEach(shieldEffect =>
         {
-            shield = 0;
-            health -= overflowDamage;
+            if (overflowDamage < 0) {
+                overflowDamage = shieldEffect.RemoveAmount(overflowDamage);
+            }
+            else return;
+        });
+        if (overflowDamage < 0)
+        {
+            health += overflowDamage;
             if (health < 0)
             {
                 health = 0;
                 death = true;
             }
             onHealthChanged?.Invoke(health);
-        } else shield -= damage;
+        }
         return death;
     }
     public void Heal(float heal)

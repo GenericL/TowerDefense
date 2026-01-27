@@ -20,25 +20,25 @@ public abstract class Character : MonoBehaviour
 
     public virtual bool Basic(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
-        PassiveManager.i.onCharacterBasicUsed.Invoke(this);
+        PassiveManager.i.OnCharacterBasicUsed.Invoke(this);
         return true;
     }
     public virtual bool Ability(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
-        PassiveManager.i.onCharacterAbilityUsed.Invoke(this);
+        PassiveManager.i.OnCharacterAbilityUsed.Invoke(this);
         return true;
     }
     public virtual void Definitive(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
-        PassiveManager.i.onCharacterDefinitiveUsed.Invoke(this);
+        PassiveManager.i.OnCharacterDefinitiveUsed.Invoke(this);
     }
     public abstract bool DoTurn(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints);
     public abstract void AddListenersToPassiveManager();
 
     public void AddStatus(Status status)
     {
-        status.ApplyStatus();
         statuses.Add(status);
+        status.ApplyStatus();
     }
     public void RemoveStatus(Status status)
     {

@@ -5,23 +5,29 @@ public class UnDiaSoleadoFactory : MultiTargetStatusFactory<UnDiaSoleadoData, Un
 public struct UnDiaSoleadoData
 {
 
-    public StatModifier<StatModifierData> teamAttackDamageBonus => new StatModifier<StatModifierData>(0.5f, new StatModifierData(StatModifierType.MULT));
+    public StatModifier<StatModifierData> teamAttackDamageBonus => new StatModifier<StatModifierData>("Un día soleado", 0.5f, new StatModifierData(StatModifierType.MULT, this));
     public TurnTimer turnDurationTimer => new TurnTimer(true, 2);
+    public bool appliedBuff;
 }
 public class UnDiaSoleado : MultiTargetStatus<UnDiaSoleadoData>
 {
     public override void ApplyStatus()
     {
-        PassiveManager.i.onCharacterBasicUsed.AddListener(OnCharacterBasicAttack);
+        data.appliedBuff = false;
+        PassiveManager.i.OnCharacterBasicUsed.AddListener(OnCharacterBasicAttack);
     }
 
     public void OnCharacterBasicAttack(Character source)
     {
         if (this.source.GetCharacterData().GetCharacterName() == source.GetCharacterData().GetCharacterName())
         {
-            foreach (Character target in targets)
+            if (!data.appliedBuff)
             {
-                target.GetCharacterData().AddAttackModifier(data.teamAttackDamageBonus);
+                foreach (Character target in targets)
+                {
+                    target.GetCharacterData().AddAttackModifier(data.teamAttackDamageBonus);
+                }
+                data.appliedBuff = true;
             }
             data.turnDurationTimer.ResetTimer();
         }
@@ -30,7 +36,7 @@ public class UnDiaSoleado : MultiTargetStatus<UnDiaSoleadoData>
     public override void RemoveStatus()
     {
         RemoveStatusesFromTargets();
-        PassiveManager.i.onCharacterBasicUsed.RemoveListener(OnCharacterBasicAttack);
+        PassiveManager.i.OnCharacterBasicUsed.RemoveListener(OnCharacterBasicAttack);
     }
 
     private void RemoveStatusesFromTargets()
@@ -46,6 +52,7 @@ public class UnDiaSoleado : MultiTargetStatus<UnDiaSoleadoData>
         if (data.turnDurationTimer.Tick())
         {
             RemoveStatusesFromTargets();
+            data.appliedBuff = false;
         }
     }
 }

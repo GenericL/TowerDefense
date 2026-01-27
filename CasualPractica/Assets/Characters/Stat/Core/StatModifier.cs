@@ -3,14 +3,16 @@ using UnityEngine;
 #nullable enable
 public readonly struct StatModifier<T> : IComparable<StatModifier<T>>, IEquatable<StatModifier<T>> where T : struct, IStatModifierData<T>
 {
+    public readonly String name;
     public readonly float value;
     public readonly TurnTimer? timer;
     public readonly T data;
 
     private readonly int hashCode;
 
-    public StatModifier(float value, T data, TurnTimer? timer = default)
+    public StatModifier(String name,float value, T data, TurnTimer? timer = default)
     {
+        this.name = name;
         this.value = value;
         this.data = data;
         this.timer = timer;

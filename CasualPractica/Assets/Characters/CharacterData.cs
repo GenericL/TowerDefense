@@ -132,7 +132,7 @@ public struct CharacterData
 
     public bool DamageRecieved(float amount) { return healthSystem.Damage(amount); }
     public void HealingRecieved(float amount) { healthSystem.Heal(amount); }
-    public void ShieldRecieved(float amount) { healthSystem.AddShield(amount); }
+    public void ShieldRecieved(ShieldEffect amount) { healthSystem.AddShield(amount); }
 
     // Getters
     public float GetFinalAttack()
@@ -190,6 +190,8 @@ public struct CharacterData
     public float GetPercentHealth() { return healthSystem.GetHealthPercent(); }
     public float GetShield() { return healthSystem.GetShield(); }
     public Color GetElementColor() { return elementColor; }
+
+    public int GetAttackModifierCount() { return attack.ModifiersCount; }
 
     // Add Modifiers
     public void AddAttackModifier(StatModifier<StatModifierData> modifier) { attack.AddModifier(modifier); }
@@ -273,7 +275,7 @@ public struct CharacterData
     }
 
     // Remove Modifiers
-    public void RemoveAttackModifier(StatModifier<StatModifierData> modifier) { attack.RemoveModifier(modifier); }
+    public bool RemoveAttackModifier(StatModifier<StatModifierData> modifier) { return attack.RemoveModifier(modifier); }
     public void RemoveDefenseModifier(StatModifier<StatModifierData> modifier) { defense.RemoveModifier(modifier); }
     public void RemoveSpeedModifier(StatModifier<StatModifierData> modifier) { speed.RemoveModifier(modifier); }
     public void RemoveGeneralResModifier(StatModifier<StatModifierData> modifier) { generalRes.RemoveModifier(modifier); }

@@ -22,7 +22,7 @@ public class Formulas
 
     private float CalculateDefenseOfEnemy(int lvlCaster, int lvlTarget, float defIgnorance)
     {
-        return lvlCaster + 100 / (1+defIgnorance)*(lvlCaster + 100 + lvlTarget + 100);
+        return lvlCaster + 100 / ((1+defIgnorance)*(lvlCaster + 100 + lvlTarget + 100));
     }
 
     private float CalculateMultiplierBonus(float generalDmgBonus, float elementalDmgBonus, float dmgReduction)
@@ -59,8 +59,7 @@ public class Formulas
         if (casterData.GetCharacterType() == CharacterType.PLAYABLE)
         {
             float defTarget = CalculateDefenseOfEnemy(casterData.GetLevel(), targetData.GetLevel(), casterData.GetDefIgnorance());
-            float rawDamage = kitDamage * multBonus * defTarget * resistence * casterData.GetTotalDamageBonus();
-
+            float rawDamage = kitDamage * multBonus * defTarget * resistence * (1 + casterData.GetTotalDamageBonus());
             if (IsCriticalHit(casterData.GetCritChance() * 100))
             {
                 float totalDamage = CritDamage(casterData.GetCritDamage(), rawDamage);
@@ -75,7 +74,7 @@ public class Formulas
         else
         {
             float defTarget = CalculateDefenseOfPlayable(targetData.GetFinalDefense(), targetData.GetLevel());
-            float rawDamage = kitDamage * multBonus * defTarget * resistence * casterData.GetTotalDamageBonus();
+            float rawDamage = kitDamage * multBonus * defTarget * resistence * (1+casterData.GetTotalDamageBonus());
 
             if (IsCriticalHit(casterData.GetCritChance() * 100)){
                 float totalDamage = CritDamage(casterData.GetCritDamage(), rawDamage);

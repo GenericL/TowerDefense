@@ -42,7 +42,8 @@ public abstract class AbilityEffect
     protected void Shield(Character caster, Character target, float shieldPercent, float flatShield)
     {
         float finalShield = Formulas.i.Shield(caster, target, shieldPercent, flatShield, kitMultiplierType);
-        target.GetCharacterData().ShieldRecieved(finalShield);
+        ShieldEffect shieldEffect = new ShieldEffect(caster, finalShield);
+        target.GetCharacterData().ShieldRecieved(shieldEffect);
         TriggerObservers(caster);
     }
 

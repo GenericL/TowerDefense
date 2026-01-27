@@ -18,7 +18,7 @@ public class RedeiScript : Playable
 
     private void Awake()
     {
-        characterData = new CharacterData("Redei", ElementType.ILLUSION, CharacterType.PLAYABLE, 800, 12, 12, 102);
+        characterData = new CharacterData("Redei", ElementType.ILLUSION, CharacterType.PLAYABLE, 2000, 12, 12, 102);
         energySystem = new EnergySystem(3);
     }
     public override void InitialSetup(Enemy[] enemies, Playable[] playables)
@@ -27,12 +27,12 @@ public class RedeiScript : Playable
     }
     public override void Dies()
     {
-        PassiveManager.i.onDamageOnEnemyTypeActivated.RemoveListener(SoberanoDeLosMonstruos);
+        PassiveManager.i.OnDamageOnEnemyTypeActivated.RemoveListener(SoberanoDeLosMonstruos);
         base.Dies();
     }
     public override void AddListenersToPassiveManager()
     {
-        PassiveManager.i.onDamageOnEnemyTypeActivated.AddListener(SoberanoDeLosMonstruos);
+        PassiveManager.i.OnDamageOnEnemyTypeActivated.AddListener(SoberanoDeLosMonstruos);
     }
     public override bool Ability(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
     {
@@ -97,7 +97,7 @@ public class RedeiScript : Playable
 
     public override void InitialPasive(Enemy[] enemies, Playable[] playables)
     {
-        PassiveManager.i.onDamageOnEnemyTypeActivated.AddListener(SoberanoDeLosMonstruos);
+        PassiveManager.i.OnDamageOnEnemyTypeActivated.AddListener(SoberanoDeLosMonstruos);
     }
 
     private bool activatedSoberanoDeLosMonstruos = false;

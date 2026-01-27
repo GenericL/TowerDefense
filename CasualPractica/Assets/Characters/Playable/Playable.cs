@@ -13,8 +13,8 @@ public abstract class Playable : Character
     {
         foreach (var type in abilityEffect.typeDMG)
         {
-            PassiveManager.i.onDamageOnEnemyTypeActivated.Invoke(type);
+            PassiveManager.i.OnDamageOnEnemyTypeActivated.Invoke(type);
         }
-        PassiveManager.i.onElementOnEnemyTypeActivated.Invoke(abilityEffect.elementDMG);
+        PassiveManager.i.OnElementOnEnemyTypeActivated.Invoke(abilityEffect.elementDMG);
     }
 }

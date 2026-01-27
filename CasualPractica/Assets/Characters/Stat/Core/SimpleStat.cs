@@ -6,7 +6,8 @@ using UnityEngine;
 public abstract class SimpleStat<T> : IStat<T> where T : struct, IStatModifierData<T>
 {
     [Header("Stat Modifiers")]
-    private readonly Dictionary<StatModifier<T>, int> modifiers = new();
+    private readonly Dictionary<String, StatModifier<T>> modifiers = new();
+    private readonly Dictionary<String, int> modifierAmount = new();
 
     [Header("Stat Values")]
     private bool isDirty;
@@ -52,11 +53,11 @@ public abstract class SimpleStat<T> : IStat<T> where T : struct, IStatModifierDa
             currentValue = baseValue;
             ClearCachedValues(baseValue);
 
-            foreach (KeyValuePair<StatModifier<T>, int> item in modifiers)
+            foreach (KeyValuePair<String, StatModifier<T>> item in modifiers)
             {
-                for(int i = 0; i < item.Value; i++)
+                for (int i = 0; i < modifierAmount[item.Key]; i++)
                 {
-                    AddOperation(item.Key, baseValue, currentValue, out currentValue);
+                    AddOperation(item.Value, baseValue, currentValue, out currentValue);
                 }
             }
         }
@@ -68,23 +69,33 @@ public abstract class SimpleStat<T> : IStat<T> where T : struct, IStatModifierDa
     protected virtual void ClearCachedValues(float baseValue) { }
     private void Add(StatModifier<T> modifier)
     {
-        modifiers.TryGetValue(modifier, out int count);
-        modifiers[modifier] = count + 1;
+        if(modifierAmount.TryGetValue(modifier.name, out int amount))
+        {
+            modifierAmount[modifier.name]++;
+        }
+        else
+        {
+            modifiers[modifier.name] = modifier;
+            modifierAmount[modifier.name] = 1;
+        }
         modifierCount++;
     }
     private bool Remove(StatModifier<T> modifier)
     {
-        if (modifiers.TryGetValue(modifier, out int count))
+        if (modifierAmount.TryGetValue(modifier.name, out int amount))
         {
             modifierCount--;
-            if (count > 1)
+            if (amount > 1)
             {
-                modifiers[modifier] = count - 1;
+                modifierAmount[modifier.name] = amount - 1;
                 return true;
             }
             else
             {
-                return modifiers.Remove(modifier);
+                bool success = modifierAmount.Remove(modifier.name);
+                if (success)
+                     success = modifiers.Remove(modifier.name);
+                return success;
             }
         }
         return false;
@@ -99,7 +110,7 @@ public abstract class SimpleStat<T> : IStat<T> where T : struct, IStatModifierDa
     {
         foreach (var item in modifiers)
         {
-            item.Key.UpdateTimer();
+            item.Value.UpdateTimer();
         }
     }
     public bool RemoveModifier(StatModifier<T> modifier)
@@ -120,12 +131,12 @@ public abstract class SimpleStat<T> : IStat<T> where T : struct, IStatModifierDa
         int keysCount = modifiers.Count;
 
         StatModifier<T>[] keys = ArrayPool<StatModifier<T>>.Shared.Rent(keysCount);
-        modifiers.Keys.CopyTo(keys, 0);
+        modifiers.Values.CopyTo(keys, 0);
 
         for (int i = 0; i < keysCount; i++)
         {
             StatModifier<T> modifier = keys[i];
-            if (match.Equals(modifier) && modifiers.Remove(modifier, out int count))
+            if (match.Equals(modifier) && modifierAmount.Remove(modifier.name, out int count) && modifiers.Remove(modifier.name))
             {
                 for (int j = 0; j < count; j++)
                 {
@@ -150,11 +161,11 @@ public abstract class SimpleStat<T> : IStat<T> where T : struct, IStatModifierDa
     }
     public void SetModifiers(IList<StatModifier<T>> results)
     {
-        foreach (KeyValuePair<StatModifier<T>, int> item in modifiers)
+        foreach (KeyValuePair<String, StatModifier<T>> item in modifiers)
         {
-            for (int i = 0; i < item.Value; i++)
+            for (int i = 0; i < modifierAmount[item.Key]; i++)
             {
-                results.Add(item.Key);
+                results.Add(item.Value);
             }
         }
     }

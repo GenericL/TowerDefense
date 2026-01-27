@@ -4,7 +4,7 @@ public class UnDiaNubladoFactory : SingleTargetStatusFactory<UnDiaNubladoData, U
 
 public struct UnDiaNubladoData
 {
-    public StatModifier<StatModifierData> selfCritDamageBonusUnDiaNublado => new StatModifier<StatModifierData>(0.07f, new StatModifierData(StatModifierType.MULT));
+    public StatModifier<StatModifierData> selfCritDamageBonusUnDiaNublado => new StatModifier<StatModifierData>("Un dia nublado", 0.07f, new StatModifierData(StatModifierType.MULT,this));
     public int maxUnDiaNubladoStacks => 8;
     public int currentUnDiaNubladoStacks;
 }
@@ -14,8 +14,8 @@ public class UnDiaNublado : SingleTargetStatus<UnDiaNubladoData>
     public override void ApplyStatus()
     {
         data.currentUnDiaNubladoStacks = 0;
-        PassiveManager.i.onCharacterAbilityUsed.AddListener(OnSelfCharacterAbility);
-        PassiveManager.i.onCharacterEndTurn.AddListener(OnEndTurn);
+        PassiveManager.i.OnCharacterAbilityUsed.AddListener(OnSelfCharacterAbility);
+        PassiveManager.i.OnCharacterEndTurn.AddListener(OnEndTurn);
     }
 
     public void OnSelfCharacterAbility(Character source)
@@ -42,8 +42,8 @@ public class UnDiaNublado : SingleTargetStatus<UnDiaNubladoData>
     public override void RemoveStatus()
     {
         source.GetCharacterData().RemoveCritDamagerModifier(data.selfCritDamageBonusUnDiaNublado);
-        PassiveManager.i.onCharacterAbilityUsed.RemoveListener(OnSelfCharacterAbility);
-        PassiveManager.i.onCharacterEndTurn.RemoveListener(OnEndTurn);
+        PassiveManager.i.OnCharacterAbilityUsed.RemoveListener(OnSelfCharacterAbility);
+        PassiveManager.i.OnCharacterEndTurn.RemoveListener(OnEndTurn);
     }
     public override void UpdateStatus()
     {

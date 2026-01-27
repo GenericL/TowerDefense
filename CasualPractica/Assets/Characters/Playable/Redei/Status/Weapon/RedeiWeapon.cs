@@ -5,7 +5,7 @@ public class RedeiWeaponFactory: MultiTargetStatusFactory<RedeiWeaponData, Redei
 
 public struct RedeiWeaponData
 {
-    public StatModifier<StatModifierData> selfCritDamageBonus => new StatModifier<StatModifierData>(0.32f, new StatModifierData(StatModifierType.MULT_TOTAL, this));
+    public StatModifier<StatModifierData> selfCritDamageBonus => new StatModifier<StatModifierData>("Redei Weapon" ,0.32f, new StatModifierData(StatModifierType.MULT_TOTAL, this));
     public ReySinPlebeyos reySinPlebeyos;
 }
 
@@ -28,6 +28,5 @@ public class RedeiWeapon : MultiTargetStatus<RedeiWeaponData>
 
     public override void UpdateStatus()
     {
-        data.reySinPlebeyos.UpdateStatus();
     }
 }

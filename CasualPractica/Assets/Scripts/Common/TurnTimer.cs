@@ -20,7 +20,7 @@ public class TurnTimer
         if (timer)
         {
             turnsLeft--;
-            return true;
+            return turnsLeft==0;
         }
         return false;
     }

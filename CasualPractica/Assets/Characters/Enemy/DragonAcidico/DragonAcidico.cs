@@ -10,7 +10,7 @@ public class DragonAcidico : Enemy
 
     private void Awake()
     {
-        characterData = new CharacterData("Dragon Acidico", ElementType.NATURA, CharacterType.ENEMY, 325, 26, 10, 105);
+        characterData = new CharacterData("Dragon Acidico", ElementType.NATURA, CharacterType.ENEMY, 2000, 26, 10, 105);
         healthBar.SetMaxHealth(325);
     }
     public override bool Ability(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
