@@ -19,6 +19,7 @@ public class BattleSystem : MonoBehaviour
     private Enemy[] enemyList;
     [SerializeField] private DisplayBattleHUD displayBattleHUD;
     [SerializeField] private AttacksButtons attackButtons;
+    [SerializeField] private CinemachineBattleSwitcher cinemachineBattleSwitcher;
 
     private Character active;
     private int primaryTarget;
@@ -35,17 +36,18 @@ public class BattleSystem : MonoBehaviour
 
     private void SetupBattle()
     {
-        var playableList = new List<Playable>();
-        for (int i = 0; i < playables.Count || i < playablesPositions.Count; i++)
+        var playableList = new Playable[4];
+        for (int i = 0; i < playables.Count && i < playablesPositions.Count; i++)
         {
             GameObject playableGO = Instantiate(playables[i], playablesPositions[i]);
+            cinemachineBattleSwitcher.setCamerasLookAt(playableGO, i);
             Playable playableUnit = playableGO.GetComponent<Playable>();
-            playableList.Add(playableUnit);
+            playableList[i] = playableUnit;
         }
-        this.playableList = playableList.ToArray();
+        this.playableList = playableList;
 
         enemyList = new Enemy[5];
-        for (int i = 0; i < enemies.Count || i < enemiesPositions.Count; i++)
+        for (int i = 0; i < enemies.Count && i < enemiesPositions.Count; i++)
         {
             GameObject enemyGO = Instantiate(enemies[i], enemiesPositions[i]);
             enemyList[i] = enemyGO.GetComponent<Enemy>();
@@ -61,12 +63,18 @@ public class BattleSystem : MonoBehaviour
     private void ExecuteInitialSetup()
     {
         playableList.ForEach(item => {
-            item.AddListenersToPassiveManager();
-            item.InitialSetup(enemyList, playableList);
+            if (item != null)
+            {
+                item.AddListenersToPassiveManager();
+                item.InitialSetup(enemyList, playableList);
+            }
         });
         playableList.ForEach(item => {
-            item.AddListenersToPassiveManager();
-            item.InitialPasive(enemyList, playableList);
+            if (item != null)
+            {
+                item.AddListenersToPassiveManager();
+                item.InitialPasive(enemyList, playableList);
+            }
         });
     }
 
@@ -95,11 +103,12 @@ public class BattleSystem : MonoBehaviour
 
         while (!battleEnded)
         {
-            foreach (var playable in playableList)
+            for (int i = 0; i < playableList.Length; i++)
             {
-                if (playable.GetTurn() && !playable.IsDead())
+                if (playableList[i] != null && playableList[i].GetTurn() && !playableList[i].IsDead())
                 {
-                    active = playable;
+                    active = playableList[i];
+                    cinemachineBattleSwitcher.SwitchState(FindSwitchState(i));
                     PlayerAction();
                     return;
                 }
@@ -113,6 +122,23 @@ public class BattleSystem : MonoBehaviour
                     return;
                 }
             }
+        }
+    }
+
+    private CombatUIState FindSwitchState(int i)
+    {
+        switch (i)
+        {
+            case 0:
+                return CombatUIState.PLAYABLE_1_TURN;
+            case 1:
+                return CombatUIState.PLAYABLE_2_TURN;
+            case 2:
+                return CombatUIState.PLAYABLE_3_TURN;
+            case 3:
+                return CombatUIState.PLAYABLE_4_TURN;
+            default:
+                return CombatUIState.WAITING_TURN;
         }
     }
 
@@ -188,20 +214,22 @@ public class BattleSystem : MonoBehaviour
     {
         Debug.Log("Enemy Turn: " + active.name);
         int target = Random.Range(0, (playableList.Length));
-        while (playableList[target].IsDead())
+        while (playableList[target] == null || playableList[target].IsDead())
         {
             target = Random.Range(0, (playableList.Length));
         }
         bool endTurn = active.DoTurn(playableList, target, abilityPoints);
         if (CheckIfPlayablesDead()) SettingState(BattleState.LOST);
-        else if (endTurn) SettingState(BattleState.WAITING_TURN);
+        else if (endTurn) {
+            SettingState(BattleState.WAITING_TURN); 
+        }
     }
     private bool CheckIfPlayablesDead()
     {
         int deadPlayables = 0;
         foreach (var playable in playableList)
         {
-            if (playable.IsDead())
+            if (playable == null || playable.IsDead())
             {
                 deadPlayables++;
             }

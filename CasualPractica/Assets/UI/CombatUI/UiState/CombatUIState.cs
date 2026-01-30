@@ -1,0 +1,8 @@
+public enum CombatUIState
+{
+    WAITING_TURN,
+    PLAYABLE_1_TURN,
+    PLAYABLE_2_TURN,
+    PLAYABLE_3_TURN,
+    PLAYABLE_4_TURN,
+}

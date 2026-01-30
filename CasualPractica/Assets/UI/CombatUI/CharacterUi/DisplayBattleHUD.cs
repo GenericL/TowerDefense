@@ -11,12 +11,15 @@ public class DisplayBattleHUD : MonoBehaviour
         Debug.Log(characters[0]);
         foreach (Playable character in characters)
         {
-            Debug.Log(character);
-            var hudInstance = Instantiate(characterHUDPrefab, Vector3.zero, Quaternion.identity, characterHUDRoot);
+            if (character != null)
+            {
+                Debug.Log(character);
+                var hudInstance = Instantiate(characterHUDPrefab, Vector3.zero, Quaternion.identity, characterHUDRoot);
 
-            var hudScript = hudInstance.GetComponent<BattleHUD>();
+                var hudScript = hudInstance.GetComponent<BattleHUD>();
 
-            hudScript.SetHUD(character, onUltimateAttackButton);
+                hudScript.SetHUD(character, onUltimateAttackButton);
+            }
         }
     }
 }
