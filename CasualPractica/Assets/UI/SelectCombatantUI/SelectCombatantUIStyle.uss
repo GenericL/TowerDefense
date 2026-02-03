@@ -21,8 +21,21 @@
 }
 
 #StartButton {
-    max-width: 30%;
+    max-width: 40%;
     align-content: auto;
     align-self: flex-end;
     right: 5%;
+    min-width: 20%;
+    top: 20%;
+    font-size: 30px;
+}
+
+.SelectionButton {
+    max-width: none;
+    height: 25%;
+    background-image: url("project://database/Assets/UI/SelectCombatantUI/Images/add.jpg?fileID=2800000&guid=1d06969cf19a8254c9116011db4f046f&type=3#add");
+    background-size: 10% 75%;
+}
+
+.unity-label {
 }

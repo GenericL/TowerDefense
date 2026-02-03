@@ -2,7 +2,18 @@
     <Style src="project://database/Assets/UI/SelectCombatantUI/SelectCombatantUIStyle.uss?fileID=7433441132597879392&amp;guid=35e3fc1e92e8e4448b2acfba7f3ef1b0&amp;type=3#SelectCombatantUIStyle" />
     <ui:Label text="Team" />
     <ui:VisualElement name="SelectionPanel" style="flex-grow: 1;">
-        <ui:Button text="Button" />
+        <ui:Button name="FirstPosition" class="SelectionButton">
+            <ui:VisualElement name="FirstPositionImage" style="flex-grow: 1;" />
+        </ui:Button>
+        <ui:Button name="SecondPosition" class="SelectionButton">
+            <ui:VisualElement name="SecondPositionImage" style="flex-grow: 1;" />
+        </ui:Button>
+        <ui:Button name="ThirdPosition" class="SelectionButton">
+            <ui:VisualElement name="ThirdPositionImage" style="flex-grow: 1;" />
+        </ui:Button>
+        <ui:Button name="FourthPosition" class="SelectionButton">
+            <ui:VisualElement name="FourthPositionImage" style="flex-grow: 1;" />
+        </ui:Button>
     </ui:VisualElement>
     <ui:VisualElement name="ButtonPanel" style="flex-grow: 1;">
         <ui:Button text="Start" name="StartButton" />
