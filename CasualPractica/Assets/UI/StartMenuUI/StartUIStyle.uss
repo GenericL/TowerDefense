@@ -1,0 +1,39 @@
+.unity-button {
+    position: relative;
+    top: auto;
+    -unity-text-align: middle-center;
+    -unity-font-style: normal;
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&guid=e3265ab4bf004d28a9537516768c1c75&type=3#LiberationSans");
+    font-size: 60px;
+    -unity-text-outline-color: rgb(203, 147, 238);
+    -unity-text-outline-width: 0.4px;
+    background-color: rgb(24, 24, 24);
+    border-left-color: rgb(82, 71, 71);
+    border-right-color: rgb(82, 71, 71);
+    border-top-color: rgb(82, 71, 71);
+    border-bottom-color: rgb(82, 71, 71);
+    color: rgb(67, 20, 111);
+    border-top-right-radius: 15%;
+    border-top-left-radius: 15%;
+    border-bottom-right-radius: 0%;
+    border-bottom-left-radius: 0%;
+    height: 10%;
+}
+
+#ButtonPanel {
+    top: 50%;
+    bottom: auto;
+    left: 40%;
+    right: 40%;
+    width: 20%;
+}
+
+#Titulo {
+    -unity-text-align: upper-center;
+    top: 20%;
+    font-size: 80px;
+    -unity-font-style: bold;
+    color: rgb(223, 113, 243);
+    -unity-text-outline-color: rgb(54, 11, 60);
+    -unity-text-outline-width: 2px;
+}

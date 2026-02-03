@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/StartMenuUI/StartUIStyle.uss?fileID=7433441132597879392&amp;guid=aa3cd1d4c5141d04abb50d510e52f7be&amp;type=3#StartUIStyle" />
+    <ui:VisualElement name="Root" style="flex-grow: 1; -unity-background-image-tint-color: rgb(255, 255, 255); background-image: url(&quot;project://database/Assets/UI/StartMenuUI/Images/Placeholder.jpg?fileID=2800000&amp;guid=45946c83f5593714eaf0f6b27f9be16e&amp;type=3#Placeholder&quot;);">
+        <ui:Label text="No Game" name="Titulo" />
+        <ui:VisualElement name="ButtonPanel" style="flex-grow: 1;">
+            <ui:Button text="Start" name="StartButton" />
+            <ui:Button text="Exit" name="ExitButton" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
