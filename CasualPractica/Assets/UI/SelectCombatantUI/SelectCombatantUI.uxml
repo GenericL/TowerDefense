@@ -9,7 +9,7 @@
             <ui:Button name="FourthPosition" class="SelectionButton" />
         </ui:VisualElement>
         <ui:VisualElement name="ButtonPanel" style="flex-grow: 1;">
-            <ui:Button name="ExitButton" style="-unity-text-align: middle-center;" />
+            <ui:Button name="ExitButton" style="-unity-text-align: middle-center; background-image: url(&quot;project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1008301579157283121&amp;guid=10623ee83ac30c941aa41b979d065530&amp;type=3#arrow-left@2x&quot;);" />
             <ui:Button text="Start" name="StartButton" style="-unity-text-align: middle-center;" />
         </ui:VisualElement>
     </ui:VisualElement>
