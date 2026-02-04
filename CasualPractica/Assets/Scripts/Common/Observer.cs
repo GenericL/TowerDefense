@@ -74,9 +74,10 @@ public class Observer<T,V>
         get => firstValue;
         set => Set(value);
     }
-    public Observer(T value = default, UnityAction<T,V> callback = null)
+    public Observer(V secondValue = default, T firstValue = default,  UnityAction<T,V> callback = null)
     {
-        this.firstValue = value;
+        this.firstValue = firstValue;
+        this.secondValue = secondValue;
         onValueChanged = new UnityEvent<T,V>();
         if (callback != null) onValueChanged.AddListener(callback);
     }

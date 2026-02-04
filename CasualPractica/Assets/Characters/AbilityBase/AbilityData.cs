@@ -22,40 +22,37 @@ public abstract class AbilityEffect
     public KitMultiplierStatType kitMultiplierType;
     public List<DamageType> typeDMG;
 
-    public abstract void Execute(Character caster, Character[] targets, int principalTarget);
-    protected void Damage(Character caster, Character target, float damagePercent)
+    public abstract void Execute(Character caster, Character[] targets, int principalTarget, ExtraActionManager extraActionManager);
+    protected void Damage(Character caster, Character target, float damagePercent, ExtraActionManager extraActionManager)
     {
         float finalDamage = Formulas.i.Damage(caster, target, damagePercent, elementDMG, kitMultiplierType);
         bool defeated = target.GetCharacterData().DamageRecieved(finalDamage);
         if (defeated)
         {
-            target.Dies();
+            target.Dies(extraActionManager);
         }
-        TriggerObservers(caster);
     }
     protected void Heal(Character caster, Character target, float healPercent, float flatHeal)
     {
         float finalHeal = Formulas.i.Heal(caster, target, healPercent, flatHeal, kitMultiplierType);
         target.GetCharacterData().HealingRecieved(finalHeal);
-        TriggerObservers(caster);
     }
     protected void Shield(Character caster, Character target, float shieldPercent, float flatShield)
     {
         float finalShield = Formulas.i.Shield(caster, target, shieldPercent, flatShield, kitMultiplierType);
         ShieldEffect shieldEffect = new ShieldEffect(caster, finalShield);
         target.GetCharacterData().ShieldRecieved(shieldEffect);
-        TriggerObservers(caster);
     }
 
-    private void TriggerObservers(Character origin)
+    protected void TriggerObservers(Character origin, ExtraActionManager extraActionManager)
     {
         if (origin is Playable playable)
         {
-            playable.NotifyAbilityUsed(this);
+            playable.NotifyAbilityUsed(this, extraActionManager);
         }
         else if (origin is Enemy enemy)
         {
-            enemy.NotifyAbilityUsed(this);
+            enemy.NotifyAbilityUsed(this, extraActionManager);
         }
     }
 }
@@ -65,9 +62,11 @@ class SingleTargetDamageEffect : AbilityEffect
 {
     public float damagePercent;
 
-    public override void Execute(Character caster, Character[] targets, int principalTarget)
+    public override void Execute(Character caster, Character[] targets, int principalTarget, ExtraActionManager extraActionManager)
     {
-       Damage(caster, targets[principalTarget], damagePercent);
+       Damage(caster, targets[principalTarget], damagePercent, extraActionManager);
+
+        TriggerObservers(caster, extraActionManager);
     }
 }
 
@@ -77,12 +76,13 @@ class SingleTargetRepeatedDamageEffect : AbilityEffect
     public float damagePercent;
     public float amount;
 
-    public override void Execute(Character caster, Character[] targets, int principalTarget)
+    public override void Execute(Character caster, Character[] targets, int principalTarget, ExtraActionManager extraActionManager)
     {
         for (int i = 0; i < amount; i++)
         {
-            Damage(caster, targets[principalTarget], damagePercent);
+            Damage(caster, targets[principalTarget], damagePercent, extraActionManager);
         }
+        TriggerObservers(caster, extraActionManager);
     }
 }
 
@@ -92,17 +92,19 @@ class AoEDamageEffect : AbilityEffect
     public float principalDamagePercent;
     public float adhancedDamagePercent;
 
-    public override void Execute(Character caster, Character[] targets, int principalTarget)
+    public override void Execute(Character caster, Character[] targets, int principalTarget, ExtraActionManager extraActionManager)
     {
         if (principalTarget != 0 && targets[principalTarget - 1] != null)
         {
-            Damage(caster, targets[principalTarget - 1], adhancedDamagePercent);
+            Damage(caster, targets[principalTarget - 1], adhancedDamagePercent, extraActionManager);
         }
         if (targets.Length > 1 && principalTarget + 1 != targets.Length && targets[principalTarget + 1] != null )
         {
-            Damage(caster, targets[principalTarget + 1], adhancedDamagePercent);
+            Damage(caster, targets[principalTarget + 1], adhancedDamagePercent, extraActionManager);
         }
-        Damage(caster, targets[principalTarget], principalDamagePercent);
+        Damage(caster, targets[principalTarget], principalDamagePercent, extraActionManager);
+
+        TriggerObservers(caster, extraActionManager);
     }
 
     
@@ -114,8 +116,10 @@ class HealingEffect : AbilityEffect
     public float healingPercent;
     public float flatHealing;
 
-    public override void Execute(Character caster, Character[] targets, int principalTarget)
+    public override void Execute(Character caster, Character[] targets, int principalTarget, ExtraActionManager extraActionManager)
     {
         Heal(caster, targets[principalTarget], healingPercent, flatHealing);
+
+        TriggerObservers(caster, extraActionManager);
     }
 }

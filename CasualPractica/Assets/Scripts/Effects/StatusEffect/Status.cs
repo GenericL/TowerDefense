@@ -2,9 +2,9 @@
 
 public abstract class Status
 {
-    public abstract void ApplyStatus();
+    public abstract void ApplyStatus(ExtraActionManager extraActionManager);
     public abstract void UpdateStatus();
-    public abstract void RemoveStatus();
+    public abstract void RemoveStatus(ExtraActionManager extraActionManager);
 }
 
 public abstract class MultiTargetStatus<DataType> : Status

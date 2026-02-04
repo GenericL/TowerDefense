@@ -20,6 +20,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] private DisplayBattleHUD displayBattleHUD;
     [SerializeField] private AttacksButtons attackButtons;
     [SerializeField] private CinemachineBattleSwitcher cinemachineBattleSwitcher;
+    private ExtraActionManager extraActionManager;
 
     private Character active;
     private int primaryTarget;
@@ -29,6 +30,7 @@ public class BattleSystem : MonoBehaviour
     private bool battleEnded = false;
     void Start()
     {
+        extraActionManager = new ExtraActionManager();
         abilityPoints = new AbilityPointSystem();
         state = BattleState.WAITING_TURN;
         SetupBattle();
@@ -65,15 +67,13 @@ public class BattleSystem : MonoBehaviour
         playableList.ForEach(item => {
             if (item != null)
             {
-                item.AddListenersToPassiveManager();
-                item.InitialSetup(enemyList, playableList);
+                item.InitialSetup(enemyList, playableList, extraActionManager);
             }
         });
         playableList.ForEach(item => {
             if (item != null)
             {
-                item.AddListenersToPassiveManager();
-                item.InitialPasive(enemyList, playableList);
+                item.InitialPasive(enemyList, playableList, extraActionManager);
             }
         });
     }
@@ -99,7 +99,7 @@ public class BattleSystem : MonoBehaviour
 
     private void WaitingTurn()
     {
-        AdditionalTurnManager.i.Invoke();
+        extraActionManager.AdditionalTurnManager.Invoke();
 
         while (!battleEnded)
         {
@@ -153,7 +153,7 @@ public class BattleSystem : MonoBehaviour
 
     public void OnBasicAttackButton()
     {
-        bool endTurn = active.Basic(enemyList.ToArray(), primaryTarget, abilityPoints);
+        bool endTurn = active.Basic(enemyList.ToArray(), primaryTarget, abilityPoints, extraActionManager);
         attackButtons.DisableButtons();
         if (CheckIfEnemiesDead()) SettingState(BattleState.WON);
         else if (endTurn)
@@ -165,7 +165,7 @@ public class BattleSystem : MonoBehaviour
 
     public void OnAbilityAttackButton()
     {
-        bool endTurn = active.Ability(enemyList.ToArray(), primaryTarget, abilityPoints);
+        bool endTurn = active.Ability(enemyList.ToArray(), primaryTarget, abilityPoints, extraActionManager);
         if (CheckIfEnemiesDead()) SettingState(BattleState.WON);
         else if (endTurn)
         {
@@ -175,7 +175,7 @@ public class BattleSystem : MonoBehaviour
     }
     public void OnUltimateAttackButton(Playable caster)
     {
-        caster.Definitive(enemyList.ToArray(), primaryTarget, abilityPoints);
+        caster.Definitive(enemyList.ToArray(), primaryTarget, abilityPoints, extraActionManager);
         CheckIfEnemiesDead();
     }
 
@@ -218,7 +218,7 @@ public class BattleSystem : MonoBehaviour
         {
             target = Random.Range(0, (playableList.Length));
         }
-        bool endTurn = active.DoTurn(playableList, target, abilityPoints);
+        bool endTurn = active.DoTurn(playableList, target, abilityPoints, extraActionManager);
         if (CheckIfPlayablesDead()) SettingState(BattleState.LOST);
         else if (endTurn) {
             SettingState(BattleState.WAITING_TURN); 

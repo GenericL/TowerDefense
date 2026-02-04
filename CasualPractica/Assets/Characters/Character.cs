@@ -15,34 +15,33 @@ public abstract class Character : MonoBehaviour
     public void ResetTurnValue() { turnSystem.Reset(); }
 
     public bool IsDead() { return isDead; }
-    public virtual void Dies() { isDead = true; }
+    public virtual void Dies(ExtraActionManager extraActionManager) { isDead = true; }
     public void Revives() {  isDead = false; }
 
-    public virtual bool Basic(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
+    public virtual bool Basic(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints, ExtraActionManager extraActionManager)
     {
-        PassiveManager.i.OnCharacterBasicUsed.Invoke(this);
+        extraActionManager.PassiveManager.OnCharacterBasicUsed.Invoke(this);
         return true;
     }
-    public virtual bool Ability(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
+    public virtual bool Ability(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints, ExtraActionManager extraActionManager)
     {
-        PassiveManager.i.OnCharacterAbilityUsed.Invoke(this);
+        extraActionManager.PassiveManager.OnCharacterAbilityUsed.Invoke(this);
         return true;
     }
-    public virtual void Definitive(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints)
+    public virtual void Definitive(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints, ExtraActionManager extraActionManager)
     {
-        PassiveManager.i.OnCharacterDefinitiveUsed.Invoke(this);
+        extraActionManager.PassiveManager.OnCharacterDefinitiveUsed.Invoke(this);
     }
-    public abstract bool DoTurn(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints);
-    public abstract void AddListenersToPassiveManager();
+    public abstract bool DoTurn(Character[] targets, int principalTarget, AbilityPointSystem abilityPoints, ExtraActionManager extraActionManager);
 
-    public void AddStatus(Status status)
+    public void AddStatus(Status status, ExtraActionManager extraActionManager)
     {
         statuses.Add(status);
-        status.ApplyStatus();
+        status.ApplyStatus(extraActionManager);
     }
-    public void RemoveStatus(Status status)
+    public void RemoveStatus(Status status, ExtraActionManager extraActionManager)
     {
-        statuses.Find(current => current == status).RemoveStatus();
+        statuses.Find(current => current == status).RemoveStatus(extraActionManager);
         statuses.Remove(status);
     }
     public void UpdateStatuses()
@@ -58,11 +57,11 @@ public abstract class Character : MonoBehaviour
         return statuses;
     }
 
-    protected void ExecuteAbility(AbilityData abilityData, Character[] targets, int principalTarget)
+    protected void ExecuteAbility(AbilityData abilityData, Character[] targets, int principalTarget, ExtraActionManager extraActionManager)
     {
         foreach (var effect in abilityData.effects)
         {
-            effect.Execute(this, targets, principalTarget);
+            effect.Execute(this, targets, principalTarget, extraActionManager);
         }
     }
 }

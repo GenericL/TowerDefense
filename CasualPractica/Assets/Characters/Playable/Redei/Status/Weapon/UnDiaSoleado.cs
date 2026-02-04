@@ -11,13 +11,13 @@ public struct UnDiaSoleadoData
 }
 public class UnDiaSoleado : MultiTargetStatus<UnDiaSoleadoData>
 {
-    public override void ApplyStatus()
+    public override void ApplyStatus(ExtraActionManager extraActionManager)
     {
         data.appliedBuff = false;
-        PassiveManager.i.OnCharacterBasicUsed.AddListener(OnCharacterBasicAttack);
+        extraActionManager.PassiveManager.OnCharacterBasicUsed.AddListener(OnCharacterBasicAttack);
     }
 
-    public void OnCharacterBasicAttack(Character source)
+    public void OnCharacterBasicAttack(Character source, ExtraActionManager extraActionManager)
     {
         if (this.source.GetCharacterData().GetCharacterName() == source.GetCharacterData().GetCharacterName())
         {
@@ -25,7 +25,8 @@ public class UnDiaSoleado : MultiTargetStatus<UnDiaSoleadoData>
             {
                 foreach (Character target in targets)
                 {
-                    target.GetCharacterData().AddAttackModifier(data.teamAttackDamageBonus);
+                    if(target != null)
+                        target.GetCharacterData().AddAttackModifier(data.teamAttackDamageBonus);
                 }
                 data.appliedBuff = true;
             }
@@ -33,17 +34,18 @@ public class UnDiaSoleado : MultiTargetStatus<UnDiaSoleadoData>
         }
     }
 
-    public override void RemoveStatus()
+    public override void RemoveStatus(ExtraActionManager extraActionManager)
     {
         RemoveStatusesFromTargets();
-        PassiveManager.i.OnCharacterBasicUsed.RemoveListener(OnCharacterBasicAttack);
+        extraActionManager.PassiveManager.OnCharacterBasicUsed.RemoveListener(OnCharacterBasicAttack);
     }
 
     private void RemoveStatusesFromTargets()
     {
         foreach (Character target in targets)
         {
-            target.GetCharacterData().RemoveAttackModifier(data.teamAttackDamageBonus);
+            if (target != null)
+                target.GetCharacterData().RemoveAttackModifier(data.teamAttackDamageBonus);
         }
     }
 

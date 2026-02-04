@@ -11,19 +11,19 @@ public struct RedeiWeaponData
 
 public class RedeiWeapon : MultiTargetStatus<RedeiWeaponData>
 {
-    public override void ApplyStatus()
+    public override void ApplyStatus(ExtraActionManager extraActionManager)
     {
         
         source.GetCharacterData().AddCritDamagerModifier(data.selfCritDamageBonus);
         data.reySinPlebeyos = (ReySinPlebeyos)new ReySinPlebeyosFactory().GetStatus(targets, source);
-        source.AddStatus(data.reySinPlebeyos);
+        source.AddStatus(data.reySinPlebeyos, extraActionManager);
     }
 
-    public override void RemoveStatus()
+    public override void RemoveStatus(ExtraActionManager extraActionManager)
     {
         source.GetCharacterData().RemoveCritDamagerModifier(data.selfCritDamageBonus);
-        data.reySinPlebeyos.RemoveStatus();
-        source.RemoveStatus(data.reySinPlebeyos);
+        data.reySinPlebeyos.RemoveStatus(extraActionManager);
+        source.RemoveStatus(data.reySinPlebeyos, extraActionManager);
     }
 
     public override void UpdateStatus()

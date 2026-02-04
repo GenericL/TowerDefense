@@ -16,13 +16,13 @@ public abstract class Enemy : Character
     public void IncrementSequence() {  sequence++; }
     public void ResetSequence() {  sequence = 0; }
 
-    public override void Dies()
+    public override void Dies(ExtraActionManager extraActionManager)
     {
-        base.Dies();
+        base.Dies(extraActionManager);
         healthBar.gameObject.SetActive(false);
     }
 
-    internal void NotifyAbilityUsed(AbilityEffect abilityEffect)
+    internal void NotifyAbilityUsed(AbilityEffect abilityEffect, ExtraActionManager extraActionManager)
     {
         
     }

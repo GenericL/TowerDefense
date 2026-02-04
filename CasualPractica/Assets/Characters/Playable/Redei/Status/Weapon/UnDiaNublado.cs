@@ -11,14 +11,14 @@ public struct UnDiaNubladoData
 
 public class UnDiaNublado : SingleTargetStatus<UnDiaNubladoData>
 {
-    public override void ApplyStatus()
+    public override void ApplyStatus(ExtraActionManager extraActionManager)
     {
         data.currentUnDiaNubladoStacks = 0;
-        PassiveManager.i.OnCharacterAbilityUsed.AddListener(OnSelfCharacterAbility);
-        PassiveManager.i.OnCharacterEndTurn.AddListener(OnEndTurn);
+        extraActionManager.PassiveManager.OnCharacterAbilityUsed.AddListener(OnSelfCharacterAbility);
+        extraActionManager.PassiveManager.OnCharacterEndTurn.AddListener(OnEndTurn);
     }
 
-    public void OnSelfCharacterAbility(Character source)
+    public void OnSelfCharacterAbility(Character source, ExtraActionManager extraActionManager)
     {
         if (this.source.GetCharacterData().GetCharacterName() != source.GetCharacterData().GetCharacterName())
         {
@@ -31,19 +31,19 @@ public class UnDiaNublado : SingleTargetStatus<UnDiaNubladoData>
         data.currentUnDiaNubladoStacks++;
         source.GetCharacterData().AddCritDamagerModifier(data.selfCritDamageBonusUnDiaNublado);
     }
-    public void OnEndTurn(Character source)
+    public void OnEndTurn(Character source, ExtraActionManager extraActionManager)
     {
         if (this.source.GetCharacterData().GetCharacterName() != source.GetCharacterData().GetCharacterName())
         {
             return;
         }
-        RemoveStatus();
+        RemoveStatus(extraActionManager);
     }
-    public override void RemoveStatus()
+    public override void RemoveStatus(ExtraActionManager extraActionManager)
     {
         source.GetCharacterData().RemoveCritDamagerModifier(data.selfCritDamageBonusUnDiaNublado);
-        PassiveManager.i.OnCharacterAbilityUsed.RemoveListener(OnSelfCharacterAbility);
-        PassiveManager.i.OnCharacterEndTurn.RemoveListener(OnEndTurn);
+        extraActionManager.PassiveManager.OnCharacterAbilityUsed.RemoveListener(OnSelfCharacterAbility);
+        extraActionManager.PassiveManager.OnCharacterEndTurn.RemoveListener(OnEndTurn);
     }
     public override void UpdateStatus()
     {
