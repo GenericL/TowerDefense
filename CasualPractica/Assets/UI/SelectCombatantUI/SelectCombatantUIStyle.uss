@@ -13,29 +13,73 @@
 }
 
 #ButtonPanel {
-    top: auto;
+    top: 20px;
     height: auto;
     max-height: 10%;
     -unity-text-align: upper-left;
     align-self: auto;
+    align-items: auto;
+    justify-content: flex-start;
+    align-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-basis: auto;
 }
 
 #StartButton {
     max-width: 40%;
     align-content: auto;
-    align-self: flex-end;
-    right: 5%;
+    align-self: flex-start;
+    right: 2%;
     min-width: 20%;
-    top: 20%;
+    top: 0%;
     font-size: 30px;
+    color: rgb(86, 21, 86);
+    -unity-text-outline-color: rgb(113, 45, 108);
+    -unity-text-outline-width: 0.7px;
+    align-items: auto;
+    flex-direction: column;
+    left: 80%;
 }
 
 .SelectionButton {
     max-width: none;
     height: 25%;
-    background-image: url("project://database/Assets/UI/SelectCombatantUI/Images/add.jpg?fileID=2800000&guid=1d06969cf19a8254c9116011db4f046f&type=3#add");
     background-size: 10% 75%;
 }
 
 .unity-label {
+    font-size: 60px;
+    color: rgb(87, 21, 87);
+    -unity-text-outline-width: 2px;
+    -unity-text-outline-color: rgb(113, 45, 108);
+}
+
+#Root {
+    background-color: rgb(13, 8, 22);
+}
+
+#ExitButton {
+    min-width: 20%;
+    max-width: 40%;
+    align-self: flex-start;
+    align-content: flex-start;
+    top: 0%;
+    left: 3%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    right: 2%;
+    color: rgb(86, 21, 86);
+    font-size: 30px;
+    -unity-text-outline-width: 0.7px;
+    -unity-text-outline-color: rgb(113, 45, 108);
+    background-image: url("project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-1008301579157283121&guid=10623ee83ac30c941aa41b979d065530&type=3#arrow-left@2x");
+    min-height: 50%;
+    -unity-background-image-tint-color: rgb(134, 45, 161);
+    -unity-background-scale-mode: scale-to-fit;
+    background-color: rgb(23, 9, 43);
+    border-left-color: rgb(43, 19, 42);
+    border-right-color: rgb(43, 19, 42);
+    border-top-color: rgb(43, 19, 42);
+    border-bottom-color: rgb(43, 19, 42);
 }

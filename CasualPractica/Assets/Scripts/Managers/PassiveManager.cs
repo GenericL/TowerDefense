@@ -15,17 +15,27 @@ public class PassiveManager
             return _i;
         }
     }
-    private PassiveManager() { }
+    private PassiveManager() 
+    {
+        onDamageOnEnemyTypeActivated = new Observer<DamageType>(DamageType.NONE);
+        onElementOnEnemyTypeActivated = new Observer<ElementType>(ElementType.NONE);
 
-    private Observer<DamageType> onDamageOnEnemyTypeActivated = new Observer<DamageType>(DamageType.NONE);
-    public Observer<ElementType> onElementOnEnemyTypeActivated = new Observer<ElementType>(ElementType.NONE);
+        onCharacterAbilityUsed = new Observer<Character>();
+        onCharacterBasicUsed = new Observer<Character>();
+        onCharacterDefinitiveUsed = new Observer<Character>();
+        onCharacterStartTurn = new Observer<Character>();
+        onCharacterEndTurn = new Observer<Character>();
+    }
 
-    public Observer<Character> onCharacterAbilityUsed = new Observer<Character>();
-    public Observer<Character> onCharacterBasicUsed = new Observer<Character>();
-    public Observer<Character> onCharacterDefinitiveUsed = new Observer<Character>();
+    private Observer<DamageType> onDamageOnEnemyTypeActivated;
+    private Observer<ElementType> onElementOnEnemyTypeActivated;
 
-    public Observer<Character> onCharacterStartTurn = new Observer<Character>();
-    public Observer<Character> onCharacterEndTurn = new Observer<Character>();
+    public Observer<Character> onCharacterAbilityUsed;
+    public Observer<Character> onCharacterBasicUsed;
+    public Observer<Character> onCharacterDefinitiveUsed;
+
+    public Observer<Character> onCharacterStartTurn;
+    public Observer<Character> onCharacterEndTurn;
 
     public Observer<DamageType> OnDamageOnEnemyTypeActivated { get { return onDamageOnEnemyTypeActivated; } }
     public Observer<ElementType> OnElementOnEnemyTypeActivated { get { return onElementOnEnemyTypeActivated; } }
