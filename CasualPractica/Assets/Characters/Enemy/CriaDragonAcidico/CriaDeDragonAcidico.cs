@@ -6,7 +6,7 @@ public class CriaDeDragonAcidico : Enemy
     [SerializeField] private AbilityData basicAttack;
     private void Awake()
     {
-        characterData = new CharacterData("Cría de Dragon Acidico", ElementType.NATURA, CharacterType.ENEMY, 125, 16, 6, 120);
+        characterData = new CharacterData("Cría de Dragon Acidico", ElementType.NATURA, CharacterType.ENEMY, 500, 16, 6, 120);
         healthBar.SetMaxHealth(125);
     }
 

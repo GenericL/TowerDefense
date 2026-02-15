@@ -21,6 +21,10 @@ public class CharacterStartingStats
     public static float PLAYABLE_SPD_MEDIUM = 104;
     public static float PLAYABLE_SPD_HIGH = 120;
 
+    public static int PLAYABLE_ENERGY_REQUIREMENT_LOW = 100;
+    public static int PLAYABLE_ENERGY_REQUIREMENT_MEDIUM = 130; 
+    public static int PLAYABLE_ENERGY_REQUIREMENT_HIGH = 160;
+
     // Playable Upgrade Percentage
     public static float PLAYABLE_HP_UPGRADE_LOW = 0.12f;
     public static float PLAYABLE_HP_UPGRADE_MEDIUM = 0.2f;

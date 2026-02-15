@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: RedeiItem
   m_EditorClassIdentifier: 
   _name: Redei
-  _selectionSprite: {fileID: 0}
+  _selectionSprite: {fileID: 21300000, guid: badb1a1cabfeddf4aa8e34061e6cc99a, type: 3}
   _portraitSprite: {fileID: 0}
   _characterGameObject: {fileID: 0}

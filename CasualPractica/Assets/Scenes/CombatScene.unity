@@ -836,7 +836,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playables:
-  - {fileID: 3544593120105624429, guid: f96083a55ed0e274ab0438d2dbfafb89, type: 3}
+  - {fileID: 5778268262234797354, guid: 81949ee7891132a488d29e51de202801, type: 3}
+  - {fileID: 899625385760986590, guid: edf02d1c24c5b5148b820cd4f93308de, type: 3}
   enemies:
   - {fileID: 5018772830012218278, guid: 6653b02516984d94bad68c1d9f5f6f3b, type: 3}
   - {fileID: 5128024161582667028, guid: 4b15b1bf8acdae04ea22a390accfd877, type: 3}
@@ -2410,7 +2411,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0.000061035156}
-  m_SizeDelta: {x: 873.99, y: 0.304}
+  m_SizeDelta: {x: 439.29, y: 0.304}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1734019463
 MonoBehaviour:

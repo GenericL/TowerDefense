@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class RedeiScript : Playable
 {
@@ -18,7 +16,14 @@ public class RedeiScript : Playable
 
     private void Awake()
     {
-        characterData = new CharacterData("Redei", ElementType.ILLUSION, CharacterType.PLAYABLE, 2000, 12, 12, 102);
+        characterData = new CharacterData(
+            "Redei", 
+            ElementType.ILLUSION, 
+            CharacterType.PLAYABLE,
+            CharacterStartingStats.PLAYABLE_HP_MEDIUM, 
+            CharacterStartingStats.PLAYABLE_ATK_HIGH, 
+            CharacterStartingStats.PLAYABLE_DEF_LOW, 
+            CharacterStartingStats.ENEMY_SPD_MEDIUM);
         energySystem = new EnergySystem(3);
     }
     public override void InitialSetup(Enemy[] enemies, Playable[] playables, ExtraActionManager extraActionManager)
@@ -91,7 +96,7 @@ public class RedeiScript : Playable
             Debug.Log("Can't use ultimate: rey = " + rey + ", tirano = " + tirano);
     }
 
-    public override void InitialPasive(Enemy[] enemies, Playable[] playables, ExtraActionManager extraActionManager)
+    public override void InitialPasive(Enemy[] enemies, Playable[] playables, AbilityPointSystem abilityPointSystem, ExtraActionManager extraActionManager)
     {
         extraActionManager.PassiveManager.OnDamageOnEnemyTypeActivated.AddListener(SoberanoDeLosMonstruos);
     }

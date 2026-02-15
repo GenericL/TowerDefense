@@ -11,7 +11,7 @@ public class TurnSystem
         avanceValue += speed;
         if (NumericConstants.AVANCE_TURN_VALUE < avanceValue)
         {
-            avanceValue -= NumericConstants.AVANCE_TURN_VALUE;
+            avanceValue = 0;
             return true;
         }
         return false;

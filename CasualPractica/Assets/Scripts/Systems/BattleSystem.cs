@@ -73,7 +73,7 @@ public class BattleSystem : MonoBehaviour
         playableList.ForEach(item => {
             if (item != null)
             {
-                item.InitialPasive(enemyList, playableList, extraActionManager);
+                item.InitialPasive(enemyList, playableList, abilityPoints, extraActionManager);
             }
         });
     }
